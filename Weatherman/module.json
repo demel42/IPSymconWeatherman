@@ -1,0 +1,11 @@
+{
+	"id": "{8AB8B668-6300-0B27-DC40-E88F67805157}",
+	"name": "MieleAtHomeDevice",
+	"type": 3,
+	"vendor": "stall.biz",
+	"aliases": ["Weatherman"],
+	"parentRequirements": [];
+	"childRequirements": [],
+	"implemented": [];
+	"prefix": "Weatherman"
+}
