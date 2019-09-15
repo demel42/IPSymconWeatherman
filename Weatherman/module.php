@@ -59,11 +59,11 @@ class Weatherman extends IPSModule
         return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
     }
 
-	public function ReceiveData($data)
-	{
-		$jdata = json_decode($data, true);
-		$buf = utf8_decode($jdata['Buffer']);
+    public function ReceiveData($data)
+    {
+        $jdata = json_decode($data, true);
+        $buf = utf8_decode($jdata['Buffer']);
 
-		$this->SendDebug(__FUNCTION__, 'buf=' . $buf, 0);
-	}
+        $this->SendDebug(__FUNCTION__, 'buf=' . $buf, 0);
+    }
 }

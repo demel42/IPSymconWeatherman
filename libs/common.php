@@ -194,16 +194,16 @@ trait WeathermanCommon
         return $bval;
     }
 
-	protected function GetStatus()
-	{
-		if (IPS_GetKernelVersion() >= 5.1) {
-			return parent::GetStatus();
-		}
-		$inst = IPS_GetInstance($this->InstanceID);
-		return $inst['InstanceStatus'];
-	}
+    protected function GetStatus()
+    {
+        if (IPS_GetKernelVersion() >= 5.1) {
+            return parent::GetStatus();
+        }
+        $inst = IPS_GetInstance($this->InstanceID);
+        return $inst['InstanceStatus'];
+    }
 
-	private function GetFormStatus()
+    private function GetFormStatus()
     {
         $formStatus = [];
         $formStatus[] = ['code' => IS_CREATING, 'icon' => 'inactive', 'caption' => 'Instance getting created'];
