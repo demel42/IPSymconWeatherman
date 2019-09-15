@@ -64,24 +64,24 @@ class Weatherman extends IPSModule
 
         $this->SendDebug(__FUNCTION__, 'data=' . $data, 0);
 
-		$rdata = $this->GetMultiBuffer('Data');
-		if (substr($data, -1) == chr(4)) {
-			$ndata = $rdata . substr($data, 0, -1);
+        $rdata = $this->GetMultiBuffer('Data');
+        if (substr($data, -1) == chr(4)) {
+            $ndata = $rdata . substr($data, 0, -1);
             $jdata = json_decode($ndata, true);
             if ($jdata == '') {
-				$this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg() . ', data=' . $ndata, 0);
-			} else {
-				$this->ProcessData($jdata);
+                $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg() . ', data=' . $ndata, 0);
+            } else {
+                $this->ProcessData($jdata);
             }
-			$ndata = '';
-		} else {
-			$ndata = $rdata . $data;
-		}
-		$this->SetMultiBuffer('Data', $ndata);
+            $ndata = '';
+        } else {
+            $ndata = $rdata . $data;
+        }
+        $this->SetMultiBuffer('Data', $ndata);
     }
 
-	private function ProcessData($jdata)
-	{
-		$this->SendDebug(__FUNCTION__, 'data=' . print_r($jdata, true), 0);
-	}
+    private function ProcessData($jdata)
+    {
+        $this->SendDebug(__FUNCTION__, 'data=' . print_r($jdata, true), 0);
+    }
 }
