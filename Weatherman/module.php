@@ -48,22 +48,40 @@ class Weatherman extends IPSModule
     protected function GetFormActions()
     {
         $formActions = [];
-        $formActions[] = ['type' => 'Button', 'label' => 'Update data', 'onClick' => 'WeathermanDevice_UpdateData($id);'];
-        $formActions[] = ['type' => 'Label', 'label' => '____________________________________________________________________________________________________'];
         $formActions[] = [
                             'type'    => 'Button',
                             'caption' => 'Module description',
                             'onClick' => 'echo "https://github.com/demel42/IPSymconWeatherman/blob/master/README.md";'
                         ];
 
-        return json_encode(['elements' => $formElements, 'actions' => $formActions, 'status' => $formStatus]);
+        return $formActions;
     }
 
-    public function ReceiveData($data)
+    public function ReceiveData($msg)
     {
-        $jdata = json_decode($data, true);
-        $buf = utf8_decode($jdata['Buffer']);
+        $jmsg = json_decode($msg, true);
+        $data = utf8_decode($jmsg['Buffer']);
 
-        $this->SendDebug(__FUNCTION__, 'buf=' . $buf, 0);
+        $this->SendDebug(__FUNCTION__, 'data=' . $data, 0);
+
+		$rdata = $this->GetMultiBuffer('Data');
+		if (substr($data, -1) == chr(4)) {
+			$ndata = $rdata . substr($data, 0, -1);
+            $jdata = json_decode($ndata, true);
+            if ($jdata == '') {
+				$this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg() . ', data=' . $ndata, 0);
+			} else {
+				$this->ProcessData($jdata);
+            }
+			$ndata = '';
+		} else {
+			$ndata = $rdata . $data;
+		}
+		$this->SetMultiBuffer('Data', $ndata);
     }
+
+	private function ProcessData($jdata)
+	{
+		$this->SendDebug(__FUNCTION__, 'data=' . print_r($jdata, true), 0);
+	}
 }
