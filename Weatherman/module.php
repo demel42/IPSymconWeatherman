@@ -62,15 +62,15 @@ class Weatherman extends IPSModule
         $this->CreateVarProfile('Weatherman.UV-Index', VARIABLETYPE_FLOAT, '', 0, 12, 0, 1, 'Sun', $associations);
 
         $associations = [];
-        $associations[] = ['Wert' =>  0, 'Name' => $this->Translate('dry'),				'Farbe' => -1];
-        $associations[] = ['Wert' =>  1, 'Name' => $this->Translate('drizzle'),			'Farbe' => -1];
-        $associations[] = ['Wert' =>  2, 'Name' => $this->Translate('mist'),			'Farbe' => -1];
-        $associations[] = ['Wert' =>  3, 'Name' => $this->Translate('light rain'),		'Farbe' => -1];
-        $associations[] = ['Wert' =>  4, 'Name' => $this->Translate('moderate rain'),	'Farbe' => -1];
-        $associations[] = ['Wert' =>  5, 'Name' => $this->Translate('heavy rain'),		'Farbe' => -1];
-        $associations[] = ['Wert' =>  6, 'Name' => $this->Translate('showers'),			'Farbe' => -1];
-        $associations[] = ['Wert' =>  7, 'Name' => $this->Translate('rain storm'),		'Farbe' => -1];
-        $associations[] = ['Wert' =>  8, 'Name' => $this->Translate('downpour'),		'Farbe' => -1];
+        $associations[] = ['Wert' =>  0, 'Name' => $this->Translate('dry'), 'Farbe' => -1];
+        $associations[] = ['Wert' =>  1, 'Name' => $this->Translate('drizzle'), 'Farbe' => -1];
+        $associations[] = ['Wert' =>  2, 'Name' => $this->Translate('mist'), 'Farbe' => -1];
+        $associations[] = ['Wert' =>  3, 'Name' => $this->Translate('light rain'), 'Farbe' => -1];
+        $associations[] = ['Wert' =>  4, 'Name' => $this->Translate('moderate rain'), 'Farbe' => -1];
+        $associations[] = ['Wert' =>  5, 'Name' => $this->Translate('heavy rain'), 'Farbe' => -1];
+        $associations[] = ['Wert' =>  6, 'Name' => $this->Translate('showers'), 'Farbe' => -1];
+        $associations[] = ['Wert' =>  7, 'Name' => $this->Translate('rain storm'), 'Farbe' => -1];
+        $associations[] = ['Wert' =>  8, 'Name' => $this->Translate('downpour'), 'Farbe' => -1];
         $this->CreateVarProfile('Weatherman.PrecipitationLevel', VARIABLETYPE_INTEGER, '', 0, 8, 0, 1, 'Rainfall', $associations);
 
         $this->RequireParent('{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}');
