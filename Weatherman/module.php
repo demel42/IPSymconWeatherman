@@ -14,11 +14,11 @@ class Weatherman extends IPSModule
 
         $this->RegisterPropertyBoolean('windspeed_in_kmh', false);
 
-		$this->RegisterPropertyInteger('altitude', false);
-		$this->RegisterPropertyBoolean('with_heatindex', false);
-		$this->RegisterPropertyBoolean('with_absolute_pressure', false);
-		$this->RegisterPropertyBoolean('with_windstrength_text', false);
-		$this->RegisterPropertyBoolean('with_precipitation_level', false);
+        $this->RegisterPropertyInteger('altitude', false);
+        $this->RegisterPropertyBoolean('with_heatindex', false);
+        $this->RegisterPropertyBoolean('with_absolute_pressure', false);
+        $this->RegisterPropertyBoolean('with_windstrength_text', false);
+        $this->RegisterPropertyBoolean('with_precipitation_level', false);
 
         $this->CreateVarProfile('Weatherman.Wifi', VARIABLETYPE_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
 
@@ -62,15 +62,15 @@ class Weatherman extends IPSModule
         $this->CreateVarProfile('Weatherman.UV-Index', VARIABLETYPE_FLOAT, '', 0, 12, 0, 1, 'Sun', $associations);
 
         $associations = [];
-		$associations[] = ['Wert' =>  0, 'Name' => $this->Translate('dry'),				'Farbe' => -1];
-		$associations[] = ['Wert' =>  1, 'Name' => $this->Translate('drizzle'),			'Farbe' => -1];
-		$associations[] = ['Wert' =>  2, 'Name' => $this->Translate('mist'),			'Farbe' => -1];
-		$associations[] = ['Wert' =>  3, 'Name' => $this->Translate('light rain'),		'Farbe' => -1];
-		$associations[] = ['Wert' =>  4, 'Name' => $this->Translate('moderate rain'),	'Farbe' => -1];
-		$associations[] = ['Wert' =>  5, 'Name' => $this->Translate('heavy rain'),		'Farbe' => -1];
-		$associations[] = ['Wert' =>  6, 'Name' => $this->Translate('showers'),			'Farbe' => -1];
-		$associations[] = ['Wert' =>  7, 'Name' => $this->Translate('rain storm'),		'Farbe' => -1];
-		$associations[] = ['Wert' =>  8, 'Name' => $this->Translate('downpour'),		'Farbe' => -1];
+        $associations[] = ['Wert' =>  0, 'Name' => $this->Translate('dry'),				'Farbe' => -1];
+        $associations[] = ['Wert' =>  1, 'Name' => $this->Translate('drizzle'),			'Farbe' => -1];
+        $associations[] = ['Wert' =>  2, 'Name' => $this->Translate('mist'),			'Farbe' => -1];
+        $associations[] = ['Wert' =>  3, 'Name' => $this->Translate('light rain'),		'Farbe' => -1];
+        $associations[] = ['Wert' =>  4, 'Name' => $this->Translate('moderate rain'),	'Farbe' => -1];
+        $associations[] = ['Wert' =>  5, 'Name' => $this->Translate('heavy rain'),		'Farbe' => -1];
+        $associations[] = ['Wert' =>  6, 'Name' => $this->Translate('showers'),			'Farbe' => -1];
+        $associations[] = ['Wert' =>  7, 'Name' => $this->Translate('rain storm'),		'Farbe' => -1];
+        $associations[] = ['Wert' =>  8, 'Name' => $this->Translate('downpour'),		'Farbe' => -1];
         $this->CreateVarProfile('Weatherman.PrecipitationLevel', VARIABLETYPE_INTEGER, '', 0, 8, 0, 1, 'Rainfall', $associations);
 
         $this->RequireParent('{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}');
@@ -80,7 +80,7 @@ class Weatherman extends IPSModule
     {
         parent::ApplyChanges();
 
-		$status = IS_ACTIVE;
+        $status = IS_ACTIVE;
 
         $vpos = 1;
         $identList = [];
@@ -98,8 +98,9 @@ class Weatherman extends IPSModule
                     break;
                 }
             }
-			if ($use)
-				$identList[] = $ident;
+            if ($use) {
+                $identList[] = $ident;
+            }
             $desc = $this->GetArrayElem($map, 'desc', '');
             $vartype = $this->GetArrayElem($map, 'type', '');
             $varprof = $this->GetArrayElem($map, 'prof', '');
@@ -109,46 +110,46 @@ class Weatherman extends IPSModule
 
         $vpos = 80;
 
-		$with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
-		if ($with_heatindex) {
-			if (!(in_array('w_temperatur', $identList) && in_array('w_feuchte_rel', $identList))) {
-				$this->SendDebug(__FUNCTION__, '"with_heatindex" needs "w_temperatur", "w_feuchte_rel"', 0);
-				$with_heatindex = false;
-				$status = IS_INVALIDCONFIG;
-			}
-		}
-		$this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), VARIABLETYPE_FLOAT, 'Weatherman.Heatindex', $vpos++, $with_heatindex);
+        $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
+        if ($with_heatindex) {
+            if (!(in_array('w_temperatur', $identList) && in_array('w_feuchte_rel', $identList))) {
+                $this->SendDebug(__FUNCTION__, '"with_heatindex" needs "w_temperatur", "w_feuchte_rel"', 0);
+                $with_heatindex = false;
+                $status = IS_INVALIDCONFIG;
+            }
+        }
+        $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), VARIABLETYPE_FLOAT, 'Weatherman.Heatindex', $vpos++, $with_heatindex);
 
-		$with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
-		if ($with_absolute_pressure) {
-			$altitude = $this->ReadPropertyInteger('altitude');
-			if (!(in_array('w_barometer', $identList) && in_array('w_temperatur', $identList) && $altitude > 0)) {
-				$this->SendDebug(__FUNCTION__, '"with_absolute_pressure" needs "w_barometer", "w_temperatur" and "altitude"', 0);
-				$with_absolute_pressure = false;
-				$status = IS_INVALIDCONFIG;
-			}
-		}
-		$this->MaintainVariable('AbsolutePressure', $this->Translate('Absolute pressure'), VARIABLETYPE_FLOAT, 'Weatherman.Pressure', $vpos++, $with_absolute_pressure);
+        $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
+        if ($with_absolute_pressure) {
+            $altitude = $this->ReadPropertyInteger('altitude');
+            if (!(in_array('w_barometer', $identList) && in_array('w_temperatur', $identList) && $altitude > 0)) {
+                $this->SendDebug(__FUNCTION__, '"with_absolute_pressure" needs "w_barometer", "w_temperatur" and "altitude"', 0);
+                $with_absolute_pressure = false;
+                $status = IS_INVALIDCONFIG;
+            }
+        }
+        $this->MaintainVariable('AbsolutePressure', $this->Translate('Absolute pressure'), VARIABLETYPE_FLOAT, 'Weatherman.Pressure', $vpos++, $with_absolute_pressure);
 
-		$with_windstrength_text = $this->ReadPropertyBoolean('with_windstrength_text');
-		if ($with_windstrength_text) {
-			if (!(in_array('w_windstaerke', $identList))) {
-				$this->SendDebug(__FUNCTION__, '"with_windstrength_text" needs "w_windstaerke"', 0);
-				$with_windstrength_text = false;
-				$status = IS_INVALIDCONFIG;
-			}
-		}
-		$this->MaintainVariable('WindStrengthText', $this->Translate('Windstrength'), VARIABLETYPE_STRING, '', $vpos++, $with_windstrength_text);
+        $with_windstrength_text = $this->ReadPropertyBoolean('with_windstrength_text');
+        if ($with_windstrength_text) {
+            if (!(in_array('w_windstaerke', $identList))) {
+                $this->SendDebug(__FUNCTION__, '"with_windstrength_text" needs "w_windstaerke"', 0);
+                $with_windstrength_text = false;
+                $status = IS_INVALIDCONFIG;
+            }
+        }
+        $this->MaintainVariable('WindStrengthText', $this->Translate('Windstrength'), VARIABLETYPE_STRING, '', $vpos++, $with_windstrength_text);
 
-		$with_precipitation_level = $this->ReadPropertyBoolean('with_precipitation_level');
-		if ($with_precipitation_level) {
-			if (!(in_array('w_regen_letzte_h', $identList))) {
-				$this->SendDebug(__FUNCTION__, '"with_precipitation_level" needs "w_regen_letzte_h"', 0);
-				$with_precipitation_level = false;
-				$status = IS_INVALIDCONFIG;
-			}
-		}
-		$this->MaintainVariable('PrecipitationLevel', $this->Translate('Precipitation level'), VARIABLETYPE_INTEGER, 'Weatherman.PrecipitationLevel', $vpos++, $with_precipitation_level);
+        $with_precipitation_level = $this->ReadPropertyBoolean('with_precipitation_level');
+        if ($with_precipitation_level) {
+            if (!(in_array('w_regen_letzte_h', $identList))) {
+                $this->SendDebug(__FUNCTION__, '"with_precipitation_level" needs "w_regen_letzte_h"', 0);
+                $with_precipitation_level = false;
+                $status = IS_INVALIDCONFIG;
+            }
+        }
+        $this->MaintainVariable('PrecipitationLevel', $this->Translate('Precipitation level'), VARIABLETYPE_INTEGER, 'Weatherman.PrecipitationLevel', $vpos++, $with_precipitation_level);
 
         $vpos = 100;
 
@@ -215,7 +216,7 @@ class Weatherman extends IPSModule
                             ]
                     ];
 
-		$items = [];
+        $items = [];
 
         $items[] = [
                     'type'     => 'List',
@@ -228,9 +229,9 @@ class Weatherman extends IPSModule
                     'values'   => $values
                 ];
 
-		$formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Variables'];
+        $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Variables'];
 
-		$items = [];
+        $items = [];
 
         $items[] = [
                     'type'    => 'CheckBox',
@@ -238,11 +239,11 @@ class Weatherman extends IPSModule
                     'caption' => 'Windspeed in km/h instead of m/s'
                 ];
 
-		$items[] = [
-					'type' => 'NumberSpinner',
-					'name' => 'altitude',
-					'caption' => 'Station altitude'
-				];
+        $items[] = [
+                    'type'    => 'NumberSpinner',
+                    'name'    => 'altitude',
+                    'caption' => 'Station altitude'
+                ];
 
         $items[] = [
                     'type'    => 'Label',
@@ -273,7 +274,7 @@ class Weatherman extends IPSModule
                     'caption' => ' ... Precipitation level (needs "w_regen_letzte_h")'
                 ];
 
-		$formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Options'];
+        $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Options'];
 
         return $formElements;
     }
@@ -387,36 +388,36 @@ class Weatherman extends IPSModule
             }
         }
 
-		$with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
-		if ($with_heatindex) {
-			$w_temperatur = $this->GetValue('w_temperatur');
-			$w_feuchte_rel = $this->GetValue('w_feuchte_rel');
-			$v = $this->calcHeatindex($w_temperatur, $w_feuchte_rel);
-			$this->SetValue('Heatindex', $v);
-		}
+        $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
+        if ($with_heatindex) {
+            $w_temperatur = $this->GetValue('w_temperatur');
+            $w_feuchte_rel = $this->GetValue('w_feuchte_rel');
+            $v = $this->calcHeatindex($w_temperatur, $w_feuchte_rel);
+            $this->SetValue('Heatindex', $v);
+        }
 
-		$with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
-		if ($with_absolute_pressure) {
-			$w_barometer = $this->GetValue('w_barometer');
-			$w_temperatur = $this->GetValue('w_temperatur');
-			$altitude = $this->ReadPropertyInteger('altitude');
-			$v = $this->calcAbsolutePressure($w_barometer, $w_temperatur, $altitude);
-			$this->SetValue('AbsolutePressure', $v);
-		}
+        $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
+        if ($with_absolute_pressure) {
+            $w_barometer = $this->GetValue('w_barometer');
+            $w_temperatur = $this->GetValue('w_temperatur');
+            $altitude = $this->ReadPropertyInteger('altitude');
+            $v = $this->calcAbsolutePressure($w_barometer, $w_temperatur, $altitude);
+            $this->SetValue('AbsolutePressure', $v);
+        }
 
-		$with_windstrength_text = $this->ReadPropertyBoolean('with_windstrength_text');
-		if ($with_windstrength_text) {
-			$w_windstaerke = $this->GetValue('w_windstaerke');
-			$v = $this->convertWindStrength2Text($w_windstaerke);
-			$this->SetValue('WindStrengthText', $v);
-		}
+        $with_windstrength_text = $this->ReadPropertyBoolean('with_windstrength_text');
+        if ($with_windstrength_text) {
+            $w_windstaerke = $this->GetValue('w_windstaerke');
+            $v = $this->convertWindStrength2Text($w_windstaerke);
+            $this->SetValue('WindStrengthText', $v);
+        }
 
-		$with_precipitation_level = $this->ReadPropertyBoolean('with_precipitation_level');
-		if ($with_precipitation_level) {
-			$w_regen_letzte_h = $this->GetValue('w_regen_letzte_h');
-			$v = $this->convertPrecipitation2Level($w_regen_letzte_h);
-			$this->SetValue('PrecipitationLevel', $v);
-		}
+        $with_precipitation_level = $this->ReadPropertyBoolean('with_precipitation_level');
+        if ($with_precipitation_level) {
+            $w_regen_letzte_h = $this->GetValue('w_regen_letzte_h');
+            $v = $this->convertPrecipitation2Level($w_regen_letzte_h);
+            $this->SetValue('PrecipitationLevel', $v);
+        }
 
         $this->SetValue('LastUpdate', time());
     }
@@ -694,25 +695,25 @@ class Weatherman extends IPSModule
 
     private function convertPrecipitation2Level(float $rain_1h)
     {
-		$rain_map = [
-				0 => 0,		// trocken
-				1 => 0.01,	// Nieselregen
-				2 => 0.1,	// Sprühregen
-				3 => 0.4,	// leichter Regen
-				4 => 1.5,	// mäßiger Regen
-				5 => 4,		// starker Regen
-				6 => 10,	// Schauerregen
-				7 => 35,	// Gewitterregen
-				8 => 100,	// Sturzregen
-			];
+        $rain_map = [
+                0 => 0,		// trocken
+                1 => 0.01,	// Nieselregen
+                2 => 0.1,	// Sprühregen
+                3 => 0.4,	// leichter Regen
+                4 => 1.5,	// mäßiger Regen
+                5 => 4,		// starker Regen
+                6 => 10,	// Schauerregen
+                7 => 35,	// Gewitterregen
+                8 => 100,	// Sturzregen
+            ];
 
-		$precipitation = 0;
-		for ($i = sizeof($rain_map) - 1; $i >= 0; $i--) {
-			if ($rain_1h >= $rain_map[$i]) {
-				$precipitation = $i;
-				break;
-			}
-		}
-		return $precipitation;
-	}
+        $precipitation = 0;
+        for ($i = count($rain_map) - 1; $i >= 0; $i--) {
+            if ($rain_1h >= $rain_map[$i]) {
+                $precipitation = $i;
+                break;
+            }
+        }
+        return $precipitation;
+    }
 }
