@@ -63,10 +63,10 @@ Anschließend erscheint ein Eintrag für das Modul in der Liste der Instanz _Mod
 
 ### b. Einrichtung des Geräte-Moduls
 
-In IP-Symcon nun unterhalb des Wurzelverzeichnisses die Funktion _Instanz hinzufügen_ (_CTRL+1_) auswählen, als Hersteller _stall_ und als Gerät _Weatherman_ auswählen.
-Es wird automatisch eine I/O-Instanz vom Type Server-Socket angeleget; das Konfigurationsformular der I/O-Instanz wird automatisch geöffnet.
+In IP-Symcon nun unterhalb des Wurzelverzeichnisses die Funktion _Instanz hinzufügen_ (_CTRL+1_) auswählen, als Hersteller _stall.biz_ und als Gerät _Weatherman_ auswählen.
+Es wird automatisch eine I/O-Instanz vom Type Server-Socket angelegt und das Konfigurationsformular dieser Instanz geöffnet.
 
-Hier die verfügbare Portnummer eintragen, an die der Weatherman Daten schicken soll und die Inszatz aktiv schalten.
+Hier die Portnummer eintragen, an die der Weatherman Daten schicken soll und die Instanz aktiv schalten.
 
 In dem Konfigurationsformular der Weatherman-Instanz kann man konfigurieren, welche Variablen übernommen werden sollen.
 
@@ -99,6 +99,9 @@ damit schickt Weatherman minütlich die Daten sowie bei bestimmten Zuständen (R
 #### Variablenprofile
 
 Es werden folgende Variablenprofile angelegt:
+* Boolean<br>
+Weatherman.RainDetector, Weatherman.SunDetector
+
 * Integer<br>
 Weatherman.Azimut, Weatherman.Elevation, Weatherman.hour, Weatherman.min, Weatherman.sec, Weatherman.Wifi, Weatherman.WindAngle, Weatherman.WindStrength
 
