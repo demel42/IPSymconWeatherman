@@ -92,9 +92,6 @@ class Weatherman extends IPSModule
             foreach ($use_fields as $field) {
                 if ($ident == $this->GetArrayElem($field, 'ident', '')) {
                     $use = $this->GetArrayElem($field, 'use', false);
-                    if ($use == '') {
-                        $use = false;
-                    }
                     break;
                 }
             }
@@ -347,24 +344,31 @@ class Weatherman extends IPSModule
             $ident = $this->GetArrayElem($var, 'homematic_name', '');
             $value = $this->GetArrayElem($var, 'value', '');
 
+            $found = false;
+
             $vartype = VARIABLETYPE_STRING;
             $varprof = '';
             foreach ($fieldMap as $map) {
                 if ($ident == $this->GetArrayElem($map, 'ident', '')) {
+                    $found = true;
+
                     $vartype = $this->GetArrayElem($map, 'type', '');
                     $varprof = $this->GetArrayElem($map, 'prof', '');
                     break;
                 }
             }
 
-            $found = false;
+            if (!$found) {
+                $this->SendDebug(__FUNCTION__, '.. unknown ident ' . $ident . ', value=' . $value, 0);
+				$this->LogMessage(__FUNCTION__ . ': unknown ident ' . $ident . ', value=' . $value, KL_NOTIFY);
+				continue;
+            }
+
             foreach ($use_fields as $field) {
                 if ($ident == $this->GetArrayElem($field, 'ident', '')) {
                     $use = $this->GetArrayElem($field, 'use', false);
-                    if ($use == '') {
-                        $use = false;
-                    }
                     if (!$use) {
+						$this->SendDebug(__FUNCTION__, '.. ignore ident ' . $ident . ', value=' . $value, 0);
                         continue;
                     }
 
@@ -380,11 +384,8 @@ class Weatherman extends IPSModule
                             $this->SetValue($ident, $value);
                             break;
                     }
-                    $found = true;
+					break;
                 }
-            }
-            if (!$found) {
-                $this->SendDebug(__FUNCTION__, '.. ignore ident=' . $ident . ', value=' . $value, 0);
             }
         }
 
