@@ -360,15 +360,15 @@ class Weatherman extends IPSModule
 
             if (!$found) {
                 $this->SendDebug(__FUNCTION__, '.. unknown ident ' . $ident . ', value=' . $value, 0);
-				$this->LogMessage(__FUNCTION__ . ': unknown ident ' . $ident . ', value=' . $value, KL_NOTIFY);
-				continue;
+                $this->LogMessage(__FUNCTION__ . ': unknown ident ' . $ident . ', value=' . $value, KL_NOTIFY);
+                continue;
             }
 
             foreach ($use_fields as $field) {
                 if ($ident == $this->GetArrayElem($field, 'ident', '')) {
                     $use = $this->GetArrayElem($field, 'use', false);
                     if (!$use) {
-						$this->SendDebug(__FUNCTION__, '.. ignore ident ' . $ident . ', value=' . $value, 0);
+                        $this->SendDebug(__FUNCTION__, '.. ignore ident ' . $ident . ', value=' . $value, 0);
                         continue;
                     }
 
@@ -384,7 +384,7 @@ class Weatherman extends IPSModule
                             $this->SetValue($ident, $value);
                             break;
                     }
-					break;
+                    break;
                 }
             }
         }
