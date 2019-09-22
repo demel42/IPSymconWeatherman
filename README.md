@@ -20,10 +20,13 @@
 
 ## 1. Funktionsumfang
 
+Übernahme aller Wetterdaten von der "do it yourself" Wetterstation _Weatherman_ von ([stall.biz](https://www.stall.biz/project/weatherman-die-perfekte-wetterstation-fuer-die-hausautomation)).
+Getestet mit der _Weatherman_-Version **1233**.
+
 ## 2. Voraussetzungen
 
  - IP-Symcon ab Version 5<br>
- - eine Weatherman-Wetterstation (siehe [stall.biz](https://www.stall.biz/project/weatherman-die-perfekte-wetterstation-fuer-die-hausautomation))
+ - eine Weatherman-Wetterstation
 
 ## 3. Installation
 
