@@ -21,7 +21,8 @@
 ## 1. Funktionsumfang
 
 Übernahme aller Wetterdaten von der "do it yourself" Wetterstation _Weatherman_ von ([stall.biz](https://www.stall.biz/project/weatherman-die-perfekte-wetterstation-fuer-die-hausautomation)).
-Getestet mit der _Weatherman_-Version **1233**.
+
+Getestet mit der Weatherman-Version **123**.
 
 ## 2. Voraussetzungen
 
