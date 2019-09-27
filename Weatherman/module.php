@@ -10,7 +10,7 @@ class Weatherman extends IPSModule
     {
         parent::Create();
 
-        $this->RegisterPropertyString('use_fields', '');
+        $this->RegisterPropertyString('use_fields', '[]');
 
         $this->RegisterPropertyBoolean('windspeed_in_kmh', false);
 
