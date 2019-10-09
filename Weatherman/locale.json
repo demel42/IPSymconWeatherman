@@ -15,7 +15,7 @@
 			"Station altitude": "Höhe der Wetterstation",
 			"additional Calculations": "zusätzliche Rechenwerte",
 			" ... Heatindex (needs \"w_temperatur\", \"w_feuchte_rel\")":
-				" ... Heatindex (benötigt \"w_temperatur\", \"w_feuchte_rel\")",
+				" ... Hitzeindex (benötigt \"w_temperatur\", \"w_feuchte_rel\")",
 			" ... absolute pressure (needs \"w_barometer\", \"w_temperatur\" and the altitude)":
 				" ... absoluter Luftdruck (benötigt \"w_barometer\", \"w_temperatur\" und die Höhe)",
 			" ... Windstrength as text (needs \"w_windstaerke\")":
@@ -36,7 +36,7 @@
 			"Brightness": "Helligkeit",
 			"Dewpoint": "Taupunkt",
 			"Difference between sun and shadow temperature": "Differenz zwischen Sonnen- und Schatten-Temperatur",
-			"Heatindex": "Heatindex",
+			"Heatindex": "Hitzeindex",
 			"Hours of rain today": "Regenstunden heute",
 			"Hours of sunshine today": "Sonnenstunden heute",
 			"Humidity": "Luftfeuchtigkeit",
