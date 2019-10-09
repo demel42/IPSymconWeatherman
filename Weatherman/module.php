@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
 
 class Weatherman extends IPSModule
@@ -91,7 +93,7 @@ class Weatherman extends IPSModule
             $use = false;
             foreach ($use_fields as $field) {
                 if ($ident == $this->GetArrayElem($field, 'ident', '')) {
-                    $use = $this->GetArrayElem($field, 'use', false);
+                    $use = (bool) $this->GetArrayElem($field, 'use', false);
                     break;
                 }
             }
@@ -194,82 +196,82 @@ class Weatherman extends IPSModule
 
         $columns = [];
         $columns[] = [
-                        'caption' => 'Name',
-                        'name'    => 'ident',
-                        'width'   => '200px',
-                        'save'    => true
-                    ];
+            'caption' => 'Name',
+            'name'    => 'ident',
+            'width'   => '200px',
+            'save'    => true
+        ];
         $columns[] = [
-                        'caption' => 'Description',
-                        'name'    => 'desc',
-                        'width'   => 'auto'
-                    ];
+            'caption' => 'Description',
+            'name'    => 'desc',
+            'width'   => 'auto'
+        ];
         $columns[] = [
-                        'caption' => 'use',
-                        'name'    => 'use',
-                        'width'   => '100px',
-                        'edit'    => [
-                                'type' => 'CheckBox'
-                            ]
-                    ];
+            'caption' => 'use',
+            'name'    => 'use',
+            'width'   => '100px',
+            'edit'    => [
+                'type' => 'CheckBox'
+            ]
+        ];
 
         $items = [];
 
         $items[] = [
-                    'type'     => 'List',
-                    'name'     => 'use_fields',
-                    'caption'  => 'available variables',
-                    'rowCount' => count($values),
-                    'add'      => false,
-                    'delete'   => false,
-                    'columns'  => $columns,
-                    'values'   => $values
-                ];
+            'type'     => 'List',
+            'name'     => 'use_fields',
+            'caption'  => 'available variables',
+            'rowCount' => count($values),
+            'add'      => false,
+            'delete'   => false,
+            'columns'  => $columns,
+            'values'   => $values
+        ];
 
         $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Variables'];
 
         $items = [];
 
         $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'windspeed_in_kmh',
-                    'caption' => 'Windspeed in km/h instead of m/s'
-                ];
+            'type'    => 'CheckBox',
+            'name'    => 'windspeed_in_kmh',
+            'caption' => 'Windspeed in km/h instead of m/s'
+        ];
 
         $items[] = [
-                    'type'    => 'NumberSpinner',
-                    'name'    => 'altitude',
-                    'caption' => 'Station altitude'
-                ];
+            'type'    => 'NumberSpinner',
+            'name'    => 'altitude',
+            'caption' => 'Station altitude'
+        ];
 
         $items[] = [
-                    'type'    => 'Label',
-                    'caption' => 'additional Calculations'
-                ];
+            'type'    => 'Label',
+            'caption' => 'additional Calculations'
+        ];
 
         $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_heatindex',
-                    'caption' => ' ... Heatindex (needs "w_temperatur", "w_feuchte_rel")'
-                ];
+            'type'    => 'CheckBox',
+            'name'    => 'with_heatindex',
+            'caption' => ' ... Heatindex (needs "w_temperatur", "w_feuchte_rel")'
+        ];
 
         $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_absolute_pressure',
-                    'caption' => ' ... absolute pressure (needs "w_barometer", "w_temperatur" and the altitude)'
-                ];
+            'type'    => 'CheckBox',
+            'name'    => 'with_absolute_pressure',
+            'caption' => ' ... absolute pressure (needs "w_barometer", "w_temperatur" and the altitude)'
+        ];
 
         $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_windstrength_text',
-                    'caption' => ' ... Windstrength as text (needs "w_windstaerke")'
-                ];
+            'type'    => 'CheckBox',
+            'name'    => 'with_windstrength_text',
+            'caption' => ' ... Windstrength as text (needs "w_windstaerke")'
+        ];
 
         $items[] = [
-                    'type'    => 'CheckBox',
-                    'name'    => 'with_precipitation_level',
-                    'caption' => ' ... Precipitation level (needs "w_regen_letzte_h")'
-                ];
+            'type'    => 'CheckBox',
+            'name'    => 'with_precipitation_level',
+            'caption' => ' ... Precipitation level (needs "w_regen_letzte_h")'
+        ];
 
         $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Options'];
 
@@ -281,10 +283,10 @@ class Weatherman extends IPSModule
         $formActions = [];
         if (IPS_GetKernelVersion() < 5.2) {
             $formActions[] = [
-                                'type'    => 'Button',
-                                'caption' => 'Module description',
-                                'onClick' => 'echo "https://github.com/demel42/IPSymconWeatherman/blob/master/README.md";'
-                            ];
+                'type'    => 'Button',
+                'caption' => 'Module description',
+                'onClick' => 'echo "https://github.com/demel42/IPSymconWeatherman/blob/master/README.md";'
+            ];
         }
 
         return $formActions;
@@ -368,7 +370,7 @@ class Weatherman extends IPSModule
 
             foreach ($use_fields as $field) {
                 if ($ident == $this->GetArrayElem($field, 'ident', '')) {
-                    $use = $this->GetArrayElem($field, 'use', false);
+                    $use = (bool) $this->GetArrayElem($field, 'use', false);
                     if (!$use) {
                         $this->SendDebug(__FUNCTION__, '.. ignore ident ' . $ident . ', value=' . $value, 0);
                         continue;
@@ -428,190 +430,190 @@ class Weatherman extends IPSModule
     private function getFieldMap()
     {
         $map = [
-                [
-                    'ident'  => 'w_ip',
-                    'desc'   => 'IP-address',
-                    'type'   => VARIABLETYPE_STRING,
-                ],
-                [
-                    'ident'  => 'w_temperatur',
-                    'desc'   => 'Shadow temperature',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Temperatur',
-                ],
-                [
-                    'ident'  => 'w_windchill',
-                    'desc'   => 'Windchill',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Windchill',
-                ],
-                [
-                    'ident'  => 'w_taupunkt',
-                    'desc'   => 'Dewpoint',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Dewpoint',
-                ],
-                [
-                    'ident'  => 'w_himmeltemperatur',
-                    'desc'   => 'Sky temperatur',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Temperatur',
-                ],
-                [
-                    'ident'  => 'w_feuchte_rel',
-                    'desc'   => 'Humidity',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Humidity',
-                ],
-                [
-                    'ident'  => 'w_feuchte_abs',
-                    'desc'   => 'Absolute humidity',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.absHumidity',
-                ],
-                [
-                    'ident'  => 'w_regensensor_wert',
-                    'desc'   => 'Rain sensor',
-                    'type'   => VARIABLETYPE_INTEGER,
-                ],
-                [
-                    'ident'  => 'w_regenmelder',
-                    'desc'   => 'Rain detector',
-                    'type'   => VARIABLETYPE_BOOLEAN,
-                    'prof'   => 'Weatherman.RainDetector',
-                ],
-                [
-                    'ident'  => 'w_regenstaerke',
-                    'desc'   => 'Precipitation',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Precipitation',
-                ],
-                [
-                    'ident'  => 'w_regen_letzte_h',
-                    'desc'   => 'Rainfall of last hour',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Rainfall',
-                ],
-                [
-                    'ident'  => 'w_regen_mm_heute',
-                    'desc'   => 'Rainfall of today',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Rainfall',
-                ],
-                [
-                    'ident'  => 'w_regenstunden_heute',
-                    'desc'   => 'Hours of rain today',
-                    'type'   => VARIABLETYPE_INTEGER,
-                    'prof'   => 'Weatherman.hour',
-                ],
-                [
-                    'ident'  => 'w_regen_mm_gestern',
-                    'desc'   => 'Rainfall of yesterday',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Rainfall',
-                ],
-                [
-                    'ident'  => 'w_barometer',
-                    'desc'   => 'Air pressure',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Pressure',
-                ],
-                [
-                    'ident'  => 'w_barotrend',
-                    'desc'   => 'Trend of air pressure',
-                    'type'   => VARIABLETYPE_STRING,
-                ],
-                [
-                    'ident'  => 'w_wind_mittel',
-                    'desc'   => 'Windspeed',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.WindSpeed',
-                ],
-                [
-                    'ident'  => 'w_wind_spitze',
-                    'desc'   => 'Speed of gusts of last 10m',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.WindSpeed',
-                ],
-                [
-                    'ident'  => 'w_windstaerke',
-                    'desc'   => 'Windstrength',
-                    'type'   => VARIABLETYPE_INTEGER,
-                    'prof'   => 'Weatherman.WindStrength',
-                ],
-                [
-                    'ident'  => 'w_windrichtung',
-                    'desc'   => 'Winddirection',
-                    'type'   => VARIABLETYPE_STRING,
-                    'prof'   => 'Weatherman.WindDirection',
-                ],
-                [
-                    'ident'  => 'w_wind_dir',
-                    'desc'   => 'Winddirection',
-                    'type'   => VARIABLETYPE_INTEGER,
-                    'prof'   => 'Weatherman.WindAngle',
-                ],
-                [
-                    'ident'  => 'w_lux',
-                    'desc'   => 'Brightness',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Lux',
-                ],
-                [
-                    'ident'  => 'w_uv_index',
-                    'desc'   => 'UV-Index',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.UV-Index',
-                ],
-                [
-                    'ident'  => 'w_sonne_diff_temp',
-                    'desc'   => 'Difference between sun and shadow temperature',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Temperatur',
-                ],
-                [
-                    'ident'  => 'w_sonnentemperatur',
-                    'desc'   => 'Sun temperatur',
-                    'type'   => VARIABLETYPE_FLOAT,
-                    'prof'   => 'Weatherman.Temperatur',
-                ],
-                [
-                    'ident'  => 'w_sonne_scheint',
-                    'desc'   => 'Sun detector',
-                    'type'   => VARIABLETYPE_BOOLEAN,
-                    'prof'   => 'Weatherman.SunDetector',
-                ],
-                [
-                    'ident'  => 'w_sonnenstunden_heute',
-                    'desc'   => 'Hours of sunshine today',
-                    'type'   => VARIABLETYPE_INTEGER,
-                    'prof'   => 'Weatherman.hour',
-                ],
-                [
-                    'ident'  => 'w_elevation',
-                    'desc'   => 'Sun elevation',
-                    'type'   => VARIABLETYPE_INTEGER,
-                    'prof'   => 'Weatherman.Elevation',
-                ],
-                [
-                    'ident'  => 'w_azimut',
-                    'desc'   => 'Sun azimut',
-                    'type'   => VARIABLETYPE_INTEGER,
-                    'prof'   => 'Weatherman.Azimut',
-                ],
-                [
-                    'ident'  => 'w_minuten_vor_sa',
-                    'desc'   => 'Minutes from sunrise',
-                    'type'   => VARIABLETYPE_INTEGER,
-                    'prof'   => 'Weatherman.min',
-                ],
-                [
-                    'ident'  => 'w_minuten_vor_su',
-                    'desc'   => 'Minutes from sunset',
-                    'type'   => VARIABLETYPE_INTEGER,
-                    'prof'   => 'Weatherman.min',
-                ],
-            ];
+            [
+                'ident'  => 'w_ip',
+                'desc'   => 'IP-address',
+                'type'   => VARIABLETYPE_STRING,
+            ],
+            [
+                'ident'  => 'w_temperatur',
+                'desc'   => 'Shadow temperature',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Temperatur',
+            ],
+            [
+                'ident'  => 'w_windchill',
+                'desc'   => 'Windchill',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Windchill',
+            ],
+            [
+                'ident'  => 'w_taupunkt',
+                'desc'   => 'Dewpoint',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Dewpoint',
+            ],
+            [
+                'ident'  => 'w_himmeltemperatur',
+                'desc'   => 'Sky temperatur',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Temperatur',
+            ],
+            [
+                'ident'  => 'w_feuchte_rel',
+                'desc'   => 'Humidity',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Humidity',
+            ],
+            [
+                'ident'  => 'w_feuchte_abs',
+                'desc'   => 'Absolute humidity',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.absHumidity',
+            ],
+            [
+                'ident'  => 'w_regensensor_wert',
+                'desc'   => 'Rain sensor',
+                'type'   => VARIABLETYPE_INTEGER,
+            ],
+            [
+                'ident'  => 'w_regenmelder',
+                'desc'   => 'Rain detector',
+                'type'   => VARIABLETYPE_BOOLEAN,
+                'prof'   => 'Weatherman.RainDetector',
+            ],
+            [
+                'ident'  => 'w_regenstaerke',
+                'desc'   => 'Precipitation',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Precipitation',
+            ],
+            [
+                'ident'  => 'w_regen_letzte_h',
+                'desc'   => 'Rainfall of last hour',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Rainfall',
+            ],
+            [
+                'ident'  => 'w_regen_mm_heute',
+                'desc'   => 'Rainfall of today',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Rainfall',
+            ],
+            [
+                'ident'  => 'w_regenstunden_heute',
+                'desc'   => 'Hours of rain today',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.hour',
+            ],
+            [
+                'ident'  => 'w_regen_mm_gestern',
+                'desc'   => 'Rainfall of yesterday',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Rainfall',
+            ],
+            [
+                'ident'  => 'w_barometer',
+                'desc'   => 'Air pressure',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Pressure',
+            ],
+            [
+                'ident'  => 'w_barotrend',
+                'desc'   => 'Trend of air pressure',
+                'type'   => VARIABLETYPE_STRING,
+            ],
+            [
+                'ident'  => 'w_wind_mittel',
+                'desc'   => 'Windspeed',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.WindSpeed',
+            ],
+            [
+                'ident'  => 'w_wind_spitze',
+                'desc'   => 'Speed of gusts of last 10m',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.WindSpeed',
+            ],
+            [
+                'ident'  => 'w_windstaerke',
+                'desc'   => 'Windstrength',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.WindStrength',
+            ],
+            [
+                'ident'  => 'w_windrichtung',
+                'desc'   => 'Winddirection',
+                'type'   => VARIABLETYPE_STRING,
+                'prof'   => 'Weatherman.WindDirection',
+            ],
+            [
+                'ident'  => 'w_wind_dir',
+                'desc'   => 'Winddirection',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.WindAngle',
+            ],
+            [
+                'ident'  => 'w_lux',
+                'desc'   => 'Brightness',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Lux',
+            ],
+            [
+                'ident'  => 'w_uv_index',
+                'desc'   => 'UV-Index',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.UV-Index',
+            ],
+            [
+                'ident'  => 'w_sonne_diff_temp',
+                'desc'   => 'Difference between sun and shadow temperature',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Temperatur',
+            ],
+            [
+                'ident'  => 'w_sonnentemperatur',
+                'desc'   => 'Sun temperatur',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Temperatur',
+            ],
+            [
+                'ident'  => 'w_sonne_scheint',
+                'desc'   => 'Sun detector',
+                'type'   => VARIABLETYPE_BOOLEAN,
+                'prof'   => 'Weatherman.SunDetector',
+            ],
+            [
+                'ident'  => 'w_sonnenstunden_heute',
+                'desc'   => 'Hours of sunshine today',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.hour',
+            ],
+            [
+                'ident'  => 'w_elevation',
+                'desc'   => 'Sun elevation',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.Elevation',
+            ],
+            [
+                'ident'  => 'w_azimut',
+                'desc'   => 'Sun azimut',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.Azimut',
+            ],
+            [
+                'ident'  => 'w_minuten_vor_sa',
+                'desc'   => 'Minutes from sunrise',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.min',
+            ],
+            [
+                'ident'  => 'w_minuten_vor_su',
+                'desc'   => 'Minutes from sunset',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.min',
+            ],
+        ];
 
         return $map;
     }
@@ -699,16 +701,16 @@ class Weatherman extends IPSModule
     private function convertPrecipitation2Level(float $rain_1h)
     {
         $rain_map = [
-                0 => 0,		// trocken
-                1 => 0.01,	// Nieselregen
-                2 => 0.1,	// Sprühregen
-                3 => 0.4,	// leichter Regen
-                4 => 1.5,	// mäßiger Regen
-                5 => 4,		// starker Regen
-                6 => 10,	// Schauerregen
-                7 => 35,	// Gewitterregen
-                8 => 100,	// Sturzregen
-            ];
+            0 => 0,		// trocken
+            1 => 0.01,	// Nieselregen
+            2 => 0.1,	// Sprühregen
+            3 => 0.4,	// leichter Regen
+            4 => 1.5,	// mäßiger Regen
+            5 => 4,		// starker Regen
+            6 => 10,	// Schauerregen
+            7 => 35,	// Gewitterregen
+            8 => 100,	// Sturzregen
+        ];
 
         $precipitation = 0;
         for ($i = count($rain_map) - 1; $i >= 0; $i--) {
