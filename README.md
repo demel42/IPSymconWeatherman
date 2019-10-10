@@ -124,10 +124,11 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.1 @ 26.09.2019 16:10<br>
+- 1.1 @ 10.10.2019 17:27<br>
   - Anpassungen an IPS 5.2
     - IPS_SetVariableProfileValues(), IPS_SetVariableProfileDigits() nur bei INTEGER, FLOAT
 	- Dokumentation-URL in module.json
+  - Umstellung von StyleCI auf php-cs-fixer
 
 - 1.0 @ 16.09.2019 17:34<br>
   Initiale Version
