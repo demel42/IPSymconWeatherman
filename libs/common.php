@@ -16,9 +16,10 @@ trait WeathermanCommon
             return;
         }
 
-        $ret = parent::SetValue($Ident, $Value);
+        @$ret = parent::SetValue($Ident, $Value);
         if ($ret == false) {
             $this->SendDebug(__FUNCTION__, 'mismatch of value "' . $Value . '" for variable ' . $Ident, 0);
+            $this->LogMessage('mismatch of value "' . $Value . '" for variable ' . $Ident, KL_WARNING);
         }
     }
 
@@ -46,9 +47,10 @@ trait WeathermanCommon
             $IsChanged = true;
         }
 
-        $ret = parent::SetValue($Ident, $Value);
+        @$ret = parent::SetValue($Ident, $Value);
         if ($ret == false) {
             $this->SendDebug(__FUNCTION__, 'mismatch of value "' . $Value . '" for variable ' . $Ident, 0);
+            $this->LogMessage('mismatch of value "' . $Value . '" for variable ' . $Ident, KL_WARNING);
             return;
         }
     }
