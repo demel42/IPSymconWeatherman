@@ -22,6 +22,9 @@
 				" ... Windstärke als Text (benötigt \"w_windstaerke\")",
 			" ... Precipitation level (needs \"w_regen_letzte_h\")":
 				" ... Niederschlag-Stufe (benötigt \"w_regen_letzte_h\")",
+			" ... use rainsensor to detect drizzle (needs \"w_regensensor_wert\")":
+				" ... Regensensor-Wert verwenden um Nieselregen zu erkennen (benötigt \"w_regensensor_wert\")",
+			"minumum rainsensor-value": "minimaler Regensensor-Wert",
 
 			"Module description": "Modulbeschreibung",
 

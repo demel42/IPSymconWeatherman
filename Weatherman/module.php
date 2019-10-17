@@ -21,6 +21,7 @@ class Weatherman extends IPSModule
         $this->RegisterPropertyBoolean('with_absolute_pressure', false);
         $this->RegisterPropertyBoolean('with_windstrength_text', false);
         $this->RegisterPropertyBoolean('with_precipitation_level', false);
+        $this->RegisterPropertyInteger('regensensor_niesel', 0);
 
         $this->CreateVarProfile('Weatherman.Wifi', VARIABLETYPE_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
 
@@ -147,7 +148,16 @@ class Weatherman extends IPSModule
                 $with_precipitation_level = false;
                 $status = IS_INVALIDCONFIG;
             }
+            $regensensor_niesel = $this->ReadPropertyInteger('regensensor_niesel');
+            if ($regensensor_niesel > 0) {
+                if (!(in_array('w_regensensor_wert', $identList))) {
+                    $this->SendDebug(__FUNCTION__, '"regensensor_niesel" needs "w_regensensor_wert"', 0);
+                    $regensensor_niesel = 0;
+                    $status = IS_INVALIDCONFIG;
+                }
+            }
         }
+
         $this->MaintainVariable('PrecipitationLevel', $this->Translate('Precipitation level'), VARIABLETYPE_INTEGER, 'Weatherman.PrecipitationLevel', $vpos++, $with_precipitation_level);
 
         $vpos = 100;
@@ -271,6 +281,17 @@ class Weatherman extends IPSModule
             'type'    => 'CheckBox',
             'name'    => 'with_precipitation_level',
             'caption' => ' ... Precipitation level (needs "w_regen_letzte_h")'
+        ];
+        $items[] = [
+            'type'    => 'Label',
+            'caption' => ' ... use rainsensor to detect drizzle (needs "w_regensensor_wert")',
+        ];
+        $items[] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'regensensor_niesel',
+            'caption' => 'minumum rainsensor-value',
+            'minumum' => 0,
+            'maximum' => 100,
         ];
 
         $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Options'];
@@ -421,6 +442,15 @@ class Weatherman extends IPSModule
         if ($with_precipitation_level) {
             $w_regen_letzte_h = $this->GetValue('w_regen_letzte_h');
             $v = $this->convertPrecipitation2Level($w_regen_letzte_h);
+            if ($v == 0) {
+                $regensensor_niesel = $this->ReadPropertyInteger('regensensor_niesel');
+                if ($regensensor_niesel > 0) {
+                    $w_regensensor_wert = $this->GetValue('w_regensensor_wert');
+                    if ($w_regensensor_wert > $regensensor_niesel) {
+                        $v = 1; // Nieselregen
+                    }
+                }
+            }
             $this->SetValue('PrecipitationLevel', $v);
         }
 

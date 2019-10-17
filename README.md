@@ -124,7 +124,8 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.1 @ 10.10.2019 17:27<br>
+- 1.1 @ 17.10.2019 17:31<br>
+  - für die Niederschlag-Stufe "Nieselregen" kann optional auch der Regensensor-Wert herangezogen werden
   - Anpassungen an IPS 5.2
     - IPS_SetVariableProfileValues(), IPS_SetVariableProfileDigits() nur bei INTEGER, FLOAT
 	- Dokumentation-URL in module.json
