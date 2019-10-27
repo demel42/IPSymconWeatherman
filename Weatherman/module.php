@@ -401,6 +401,10 @@ class Weatherman extends IPSModule
                         $value = floatval($value) * 3.6;
                     }
 
+                    if ($ident == 'w_barotrend') {
+                        $value = str_replace('_', ' ', $value);
+                    }
+
                     switch ($vartype) {
                         case VARIABLETYPE_INTEGER:
                             $this->SetValue($ident, intval($value));

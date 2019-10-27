@@ -1,7 +1,7 @@
 # IPSymconWeatherman
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.1-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.2-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
@@ -123,6 +123,9 @@ GUIDs
   - Weatherman: `{8AB8B668-6300-0B27-DC40-E88F67805157}`
 
 ## 7. Versions-Historie
+
+- 1.2 @ 27.10.2019 06:19<br>
+  - Luftdruck-Trend ist jetzt ein normaler Text (Unterstriche durch Leerzeichen ersetzt)
 
 - 1.1 @ 17.10.2019 17:31<br>
   - für die Niederschlag-Stufe "Nieselregen" kann optional auch der Regensensor-Wert herangezogen werden
