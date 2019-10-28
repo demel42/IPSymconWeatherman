@@ -96,8 +96,17 @@ damit schickt Weatherman minütlich die Daten sowie bei bestimmten Zuständen (R
 
 | Eigenschaft                           | Typ      | Standardwert | Beschreibung |
 | :------------------------------------ | :------  | :----------- | :----------- |
-| Windgeschwindigkeit in km/h statt m/s | boolean  | false        |              |
-|                                       |          |              |              |
+| Windgeschwindigkeit in km/h statt m/s | boolean  | false        | |
+|                                       |          |              | |
+| Höhe der Wetterstation über NN        | integer  | 0            | |
+|                                       |          |              | |
+| Hitzeindex                            | boolean  | false        | Hitzeindex berechnen |
+| absoluter Luftdruck                   | boolean  | false        | lokalen Luftdruck berechnen  |
+| Windstärke als Text                   | boolean  | false        | Windstärke als Text ausgeben |
+| Niederschlag-Stufe                    | boolean  | false        | Niederschlag als text ausgeben |
+|                                       |          |              | |
+| Regensensor-Wert                      | integer  | 0            | Regensensor-Wert verwenden um Nieselregen zu erkennen |
+|                                       |          |              | |
 
 #### Variablenprofile
 
@@ -106,11 +115,12 @@ Es werden folgende Variablenprofile angelegt:
 Weatherman.RainDetector, Weatherman.SunDetector
 
 * Integer<br>
-Weatherman.Azimut, Weatherman.Elevation, Weatherman.hour, Weatherman.min, Weatherman.sec, Weatherman.Wifi, Weatherman.WindAngle, Weatherman.WindStrength
+Weatherman.Azimut, Weatherman.Elevation, Weatherman.hour, Weatherman.min, Weatherman.PrecipitationLevel, Weatherman.sec, Weatherman.Wifi,
+Weatherman.WindAngle, Weatherman.WindStrength
 
 * Float<br>
-Weatherman.absHumidity, Weatherman.Dewpoint, Weatherman.Humidity, Weatherman.Lux, Weatherman.Pressure, Weatherman.Rainfall, Weatherman.RainStrength,
-Weatherman.Temperatur, Weatherman.UV-Index, Weatherman.Windchill, Weatherman.WindSpeed
+Weatherman.absHumidity, Weatherman.Dewpoint, Weatherman.Humidity, Weatherman.Lux, Weatherman.Precipitation, Weatherman.Pressure,
+Weatherman.Rainfall, Weatherman.RainStrength, Weatherman.Temperatur, Weatherman.UV-Index, Weatherman.Windchill, Weatherman.WindSpeed
 
 * String<br>
 Weatherman.WindDirection
