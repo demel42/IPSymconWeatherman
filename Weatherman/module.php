@@ -368,12 +368,16 @@ class Weatherman extends IPSModule
         foreach ($vars as $var) {
             $ident = $this->GetArrayElem($var, 'homematic_name', '');
             $value = $this->GetArrayElem($var, 'value', '');
+            $this->SendDebug(__FUNCTION__, 'ident="' . $ident . '"', 0);
 
             $found = false;
 
             $vartype = VARIABLETYPE_STRING;
             $varprof = '';
             foreach ($fieldMap as $map) {
+                $this->SendDebug(__FUNCTION__, '  map=' . print_r($map, true), 0);
+                $_ident = $this->GetArrayElem($map, 'ident', '');
+                $this->SendDebug(__FUNCTION__, '  _ident="' . $_ident . '"', 0);
                 if ($ident == $this->GetArrayElem($map, 'ident', '')) {
                     $found = true;
 
