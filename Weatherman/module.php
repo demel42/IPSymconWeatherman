@@ -344,7 +344,7 @@ class Weatherman extends IPSModule
         $this->SendDebug(__FUNCTION__, 'Systeminfo=' . print_r($systeminfo, true), 0);
 
         $s = $this->GetArrayElem($jdata, 'Systeminfo.zeitpunkt', '');
-        if (preg_match('#^([0-9]+)\.([0-9]+)\.([0-9]+) /([0-9]+)h([0-9]+)$#', $s, $r)) {
+        if (preg_match('#^([0-9]+)\.([0-9]+)\.([0-9]+)[ ]*/([0-9]+)h([0-9]+)$#', $s, $r)) {
             $tstamp = strtotime($r[1] . '-' . $r[2] . '-' . $r[3] . ' ' . $r[4] . ':' . $r[5] . ':00');
         } else {
             $this->SendDebug(__FUNCTION__, 'unable to decode date "' . $s . '"', 0);
@@ -364,26 +364,36 @@ class Weatherman extends IPSModule
 
         $fieldMap = $this->getFieldMap();
         $this->SendDebug(__FUNCTION__, 'fieldMap="' . print_r($fieldMap, true) . '"', 0);
+        $identV = [];
+        foreach ($fieldMap as $map) {
+            $identV[] = $this->GetArrayElem($map, 'ident', '');
+        }
+        $identS = implode(',', $identV);
+        $this->SendDebug(__FUNCTION__, 'known idents=' . $identS, 0);
+
         $use_fields = json_decode($this->ReadPropertyString('use_fields'), true);
-        $this->SendDebug(__FUNCTION__, 'use_fields="' . print_r($use_fields, true) . '"', 0);
+        $use_fieldsV = [];
+        foreach ($use_fields as $field) {
+            if ((bool) $this->GetArrayElem($field, 'use', false)) {
+                $use_fieldsV[] = $this->GetArrayElem($field, 'ident', '');
+            }
+        }
+        $use_fieldsS = implode(',', $use_fieldsV);
+        $this->SendDebug(__FUNCTION__, 'use fields=' . $use_fieldsS, 0);
+
         $vars = $this->GetArrayElem($jdata, 'vars', '');
-        $this->SendDebug(__FUNCTION__, 'vars="' . print_r($vars, true) . '"', 0);
         foreach ($vars as $var) {
+            // $this->SendDebug(__FUNCTION__, 'var=' . print_r($var, true), 0);
             $ident = $this->GetArrayElem($var, 'homematic_name', '');
             $value = $this->GetArrayElem($var, 'value', '');
-            $this->SendDebug(__FUNCTION__, 'ident="' . $ident . '"', 0);
 
             $found = false;
 
             $vartype = VARIABLETYPE_STRING;
             $varprof = '';
             foreach ($fieldMap as $map) {
-                $_ident = $this->GetArrayElem($map, 'ident', '');
-                $this->SendDebug(__FUNCTION__, ' test ident="' . $_ident . '"', 0);
                 if ($ident == $this->GetArrayElem($map, 'ident', '')) {
-                    $this->SendDebug(__FUNCTION__, '  found map=' . print_r($map, true), 0);
                     $found = true;
-
                     $vartype = $this->GetArrayElem($map, 'type', '');
                     $varprof = $this->GetArrayElem($map, 'prof', '');
                     break;
@@ -391,7 +401,7 @@ class Weatherman extends IPSModule
             }
 
             if (!$found) {
-                $this->SendDebug(__FUNCTION__, '.. unknown ident ' . $ident . ', value=' . $value, 0);
+                $this->SendDebug(__FUNCTION__, 'unknown ident "' . $ident . '", value=' . $value, 0);
                 $this->LogMessage(__FUNCTION__ . ': unknown ident ' . $ident . ', value=' . $value, KL_NOTIFY);
                 continue;
             }
@@ -400,9 +410,11 @@ class Weatherman extends IPSModule
                 if ($ident == $this->GetArrayElem($field, 'ident', '')) {
                     $use = (bool) $this->GetArrayElem($field, 'use', false);
                     if (!$use) {
-                        $this->SendDebug(__FUNCTION__, '.. ignore ident ' . $ident . ', value=' . $value, 0);
+                        $this->SendDebug(__FUNCTION__, 'ignore ident "' . $ident . '", value=' . $value, 0);
                         continue;
                     }
+
+                    $this->SendDebug(__FUNCTION__, 'found ident "' . $ident . '", value=' . $value, 0);
 
                     if ($varprof == 'Weatherman.WindSpeed' && $windspeed_in_kmh) {
                         $value = floatval($value) * 3.6;
