@@ -119,8 +119,9 @@ Weatherman.Azimut, Weatherman.Elevation, Weatherman.hour, Weatherman.min, Weathe
 Weatherman.WindAngle, Weatherman.WindStrength
 
 * Float<br>
-Weatherman.absHumidity, Weatherman.Dewpoint, Weatherman.Humidity, Weatherman.Lux, Weatherman.Precipitation, Weatherman.Pressure,
-Weatherman.Rainfall, Weatherman.RainStrength, Weatherman.Temperatur, Weatherman.UV-Index, Weatherman.Windchill, Weatherman.WindSpeed
+Weatherman.absHumidity, Weatherman.Dewpoint, Weatherman.Heatindex, Weatherman.Humidity, Weatherman.Lux, Weatherman.Precipitation,
+Weatherman.Pressure, Weatherman.Rainfall, Weatherman.RainStrength, Weatherman.Temperatur, Weatherman.UV-Index, Weatherman.Windchill,
+Weatherman.WindSpeed
 
 * String<br>
 Weatherman.WindDirection
@@ -136,6 +137,7 @@ GUIDs
 
 - 1.3 @ 14.12.2019 17:04<br>
   - Debug erweitert
+  - Variablenprofil 'Weatherman.Heatindex' fehlte
 
 - 1.2 @ 27.10.2019 06:19<br>
   - Luftdruck-Trend ist jetzt ein normaler Text (Unterstriche durch Leerzeichen ersetzt)
