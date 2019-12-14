@@ -363,8 +363,11 @@ class Weatherman extends IPSModule
         $windspeed_in_kmh = $this->ReadPropertyBoolean('windspeed_in_kmh');
 
         $fieldMap = $this->getFieldMap();
+        $this->SendDebug(__FUNCTION__, 'fieldMap="' . print_r($fieldMap, true) . '"', 0);
         $use_fields = json_decode($this->ReadPropertyString('use_fields'), true);
+        $this->SendDebug(__FUNCTION__, 'use_fields="' . print_r($use_fields, true) . '"', 0);
         $vars = $this->GetArrayElem($jdata, 'vars', '');
+        $this->SendDebug(__FUNCTION__, 'vars="' . print_r($vars, true) . '"', 0);
         foreach ($vars as $var) {
             $ident = $this->GetArrayElem($var, 'homematic_name', '');
             $value = $this->GetArrayElem($var, 'value', '');
@@ -375,10 +378,10 @@ class Weatherman extends IPSModule
             $vartype = VARIABLETYPE_STRING;
             $varprof = '';
             foreach ($fieldMap as $map) {
-                $this->SendDebug(__FUNCTION__, '  map=' . print_r($map, true), 0);
                 $_ident = $this->GetArrayElem($map, 'ident', '');
-                $this->SendDebug(__FUNCTION__, '  _ident="' . $_ident . '"', 0);
+                $this->SendDebug(__FUNCTION__, ' test ident="' . $_ident . '"', 0);
                 if ($ident == $this->GetArrayElem($map, 'ident', '')) {
+                    $this->SendDebug(__FUNCTION__, '  found map=' . print_r($map, true), 0);
                     $found = true;
 
                     $vartype = $this->GetArrayElem($map, 'type', '');
