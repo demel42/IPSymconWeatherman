@@ -431,7 +431,7 @@ class Weatherman extends IPSModule
                         continue;
                     }
 
-                    $this->SendDebug(__FUNCTION__, 'found ident "' . $ident . '", value=' . $value, 0);
+                    $this->SendDebug(__FUNCTION__, 'use ident "' . $ident . '", value=' . $value, 0);
 
                     if ($varprof == 'Weatherman.WindSpeed' && $windspeed_in_kmh) {
                         $value = floatval($value) * 3.6;
