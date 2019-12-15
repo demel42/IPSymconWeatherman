@@ -135,9 +135,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.3 @ 14.12.2019 17:04<br>
+- 1.3 @ 15.12.2019 11:53<br>
   - Debug erweitert
   - Variablenprofil 'Weatherman.Heatindex' fehlte
+  - ReceiveData() umgebaut
 
 - 1.2 @ 27.10.2019 06:19<br>
   - Luftdruck-Trend ist jetzt ein normaler Text (Unterstriche durch Leerzeichen ersetzt)

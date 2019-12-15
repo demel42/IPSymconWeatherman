@@ -319,18 +319,34 @@ class Weatherman extends IPSModule
         $jmsg = json_decode($msg, true);
         $data = utf8_decode($jmsg['Buffer']);
 
-        $rdata = $this->GetMultiBuffer('Data');
-        if (substr($data, -1) == chr(4)) {
-            $ndata = $rdata . substr($data, 0, -1);
-            $jdata = json_decode($ndata, true);
-            if ($jdata == '') {
-                $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg() . ', data=' . $ndata, 0);
-            } else {
-                $this->ProcessData($jdata);
-            }
-            $ndata = '';
-        } else {
-            $ndata = $rdata . $data;
+        switch ((int) $jmsg['Type']) {
+            case 0: /* Data */
+                $this->SendDebug(__FUNCTION__, $jmsg['ClientIP'] . ':' . $jmsg['ClientPort'] . ' => received: ' . $data, 0);
+                $rdata = $this->GetMultiBuffer('Data');
+                if (substr($data, -1) == chr(4)) {
+                    $ndata = $rdata . substr($data, 0, -1);
+                } else {
+                    $ndata = $rdata . $data;
+                }
+                break;
+            case 1: /* Connected */
+                $this->SendDebug(__FUNCTION__, $jmsg['ClientIP'] . ':' . $jmsg['ClientPort'] . ' => connected', 0);
+                $ndata = '';
+                break;
+            case 2: /* Disconnected */
+                $this->SendDebug(__FUNCTION__, $jmsg['ClientIP'] . ':' . $jmsg['ClientPort'] . ' => disonnected', 0);
+                $rdata = $this->GetMultiBuffer('Data');
+                $jdata = json_decode($rdata, true);
+                if ($jdata == '') {
+                    $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg() . ', data=' . $ndata, 0);
+                } else {
+                    $this->ProcessData($jdata);
+                }
+                $ndata = '';
+                break;
+            default:
+                $this->SendDebug(__FUNCTION__, 'unknown Type, jmsg=' . print_r($jmsg, true), 0);
+                break;
         }
         $this->SetMultiBuffer('Data', $ndata);
     }
