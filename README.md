@@ -1,7 +1,7 @@
 # IPSymconWeatherman
 
 [![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
-![Module-Version](https://img.shields.io/badge/Modul_Version-1.3-blue.svg)
+![Module-Version](https://img.shields.io/badge/Modul_Version-1.4-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
@@ -135,15 +135,20 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.3 @ 15.12.2019 11:53<br>
+- 1.4 @ 20.12.2019 13:54
+  - Anpassungen an IPS 5.3
+    - Formular-Elemente: 'label' in 'caption' geändert
+  Fix in ReceiveData()
+
+- 1.3 @ 15.12.2019 11:53
   - Debug erweitert
   - Variablenprofil 'Weatherman.Heatindex' fehlte
   - ReceiveData() umgebaut
 
-- 1.2 @ 27.10.2019 06:19<br>
+- 1.2 @ 27.10.2019 06:19
   - Luftdruck-Trend ist jetzt ein normaler Text (Unterstriche durch Leerzeichen ersetzt)
 
-- 1.1 @ 17.10.2019 17:31<br>
+- 1.1 @ 17.10.2019 17:31
   - für die Niederschlag-Stufe "Nieselregen" kann optional auch der Regensensor-Wert herangezogen werden
   - Anpassungen an IPS 5.2
     - IPS_SetVariableProfileValues(), IPS_SetVariableProfileDigits() nur bei INTEGER, FLOAT
@@ -151,5 +156,5 @@ GUIDs
   - Umstellung auf strict_types=1
   - Umstellung von StyleCI auf php-cs-fixer
 
-- 1.0 @ 16.09.2019 17:34<br>
-  Initiale Version
+- 1.0 @ 16.09.2019 17:34
+  - Initiale Version

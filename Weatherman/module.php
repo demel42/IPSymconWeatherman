@@ -195,7 +195,7 @@ class Weatherman extends IPSModule
     protected function GetFormElements()
     {
         $formElements = [];
-        $formElements[] = ['type' => 'Label', 'label' => 'Weatherman'];
+        $formElements[] = ['type' => 'Label', 'caption' => 'Weatherman'];
 
         $values = [];
         $fieldMap = $this->getFieldMap();
@@ -336,11 +336,13 @@ class Weatherman extends IPSModule
             case 2: /* Disconnected */
                 $this->SendDebug(__FUNCTION__, $jmsg['ClientIP'] . ':' . $jmsg['ClientPort'] . ' => disonnected', 0);
                 $rdata = $this->GetMultiBuffer('Data');
-                $jdata = json_decode($rdata, true);
-                if ($jdata == '') {
-                    $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg() . ', data=' . $ndata, 0);
-                } else {
-                    $this->ProcessData($jdata);
+                if ($rdata != '') {
+                    $jdata = json_decode($rdata, true);
+                    if ($jdata == '') {
+                        $this->SendDebug(__FUNCTION__, 'json_error=' . json_last_error_msg() . ', data=' . $rdata, 0);
+                    } else {
+                        $this->ProcessData($jdata);
+                    }
                 }
                 $ndata = '';
                 break;
