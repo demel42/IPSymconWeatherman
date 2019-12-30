@@ -1,6 +1,6 @@
 # IPSymconWeatherman
 
-[![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
+[![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.3+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
 ![Module-Version](https://img.shields.io/badge/Modul_Version-1.4-blue.svg)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -25,7 +25,7 @@ Getestet mit der Weatherman-Version **123**.
 
 ## 2. Voraussetzungen
 
- - IP-Symcon ab Version 5<br>
+ - IP-Symcon ab Version 5.3
  - eine Weatherman-Wetterstation
 
 ## 3. Installation
@@ -135,10 +135,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.4 @ 20.12.2019 13:54
+- 1.4 @ 30.12.2019 10:56
   - Anpassungen an IPS 5.3
     - Formular-Elemente: 'label' in 'caption' geändert
-  Fix in ReceiveData()
+  - Fix in ReceiveData()
 
 - 1.3 @ 15.12.2019 11:53
   - Debug erweitert
