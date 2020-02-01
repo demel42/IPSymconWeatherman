@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
 
+if (!defined('WEATHERMAN_MODULE_NONE')) {
+    define('WEATHERMAN_MODULE_NONE', 0);
+    define('WEATHERMAN_MODULE_CLASSIC', 1);
+    define('WEATHERMAN_MODULE_EDITION', 2);
+}
+
 class Weatherman extends IPSModule
 {
     use WeathermanCommon;
@@ -12,6 +18,7 @@ class Weatherman extends IPSModule
     {
         parent::Create();
 
+        $this->RegisterPropertyInteger('module_type', WEATHERMAN_MODULE_CLASSIC);
         $this->RegisterPropertyString('use_fields', '[]');
 
         $this->RegisterPropertyBoolean('windspeed_in_kmh', false);
@@ -86,10 +93,13 @@ class Weatherman extends IPSModule
 
         $status = IS_ACTIVE;
 
+        $module_type = $this->ReadPropertyInteger('module_type');
+
         $vpos = 1;
-        $identList = [];
+        $varList = [];
+
         $use_fields = json_decode($this->ReadPropertyString('use_fields'), true);
-        $fieldMap = $this->getFieldMap();
+        $fieldMap = $this->getFieldMap($module_type);
         foreach ($fieldMap as $map) {
             $ident = $this->GetArrayElem($map, 'ident', '');
             $use = false;
@@ -100,7 +110,7 @@ class Weatherman extends IPSModule
                 }
             }
             if ($use) {
-                $identList[] = $ident;
+                $varList[] = $ident;
             }
             $desc = $this->GetArrayElem($map, 'desc', '');
             $vartype = $this->GetArrayElem($map, 'type', '');
@@ -113,7 +123,7 @@ class Weatherman extends IPSModule
 
         $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
         if ($with_heatindex) {
-            if (!(in_array('w_temperatur', $identList) && in_array('w_feuchte_rel', $identList))) {
+            if (!(in_array('w_temperatur', $varList) && in_array('w_feuchte_rel', $varList))) {
                 $this->SendDebug(__FUNCTION__, '"with_heatindex" needs "w_temperatur", "w_feuchte_rel"', 0);
                 $with_heatindex = false;
                 $status = IS_INVALIDCONFIG;
@@ -124,7 +134,7 @@ class Weatherman extends IPSModule
         $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
         if ($with_absolute_pressure) {
             $altitude = $this->ReadPropertyInteger('altitude');
-            if (!(in_array('w_barometer', $identList) && in_array('w_temperatur', $identList) && $altitude > 0)) {
+            if (!(in_array('w_barometer', $varList) && in_array('w_temperatur', $varList) && $altitude > 0)) {
                 $this->SendDebug(__FUNCTION__, '"with_absolute_pressure" needs "w_barometer", "w_temperatur" and "altitude"', 0);
                 $with_absolute_pressure = false;
                 $status = IS_INVALIDCONFIG;
@@ -134,7 +144,7 @@ class Weatherman extends IPSModule
 
         $with_windstrength_text = $this->ReadPropertyBoolean('with_windstrength_text');
         if ($with_windstrength_text) {
-            if (!(in_array('w_windstaerke', $identList))) {
+            if (!(in_array('w_windstaerke', $varList))) {
                 $this->SendDebug(__FUNCTION__, '"with_windstrength_text" needs "w_windstaerke"', 0);
                 $with_windstrength_text = false;
                 $status = IS_INVALIDCONFIG;
@@ -144,14 +154,14 @@ class Weatherman extends IPSModule
 
         $with_precipitation_level = $this->ReadPropertyBoolean('with_precipitation_level');
         if ($with_precipitation_level) {
-            if (!(in_array('w_regen_letzte_h', $identList))) {
+            if (!(in_array('w_regen_letzte_h', $varList))) {
                 $this->SendDebug(__FUNCTION__, '"with_precipitation_level" needs "w_regen_letzte_h"', 0);
                 $with_precipitation_level = false;
                 $status = IS_INVALIDCONFIG;
             }
             $regensensor_niesel = $this->ReadPropertyInteger('regensensor_niesel');
             if ($regensensor_niesel > 0) {
-                if (!(in_array('w_regensensor_wert', $identList))) {
+                if (!(in_array('w_regensensor_wert', $varList))) {
                     $this->SendDebug(__FUNCTION__, '"regensensor_niesel" needs "w_regensensor_wert"', 0);
                     $regensensor_niesel = 0;
                     $status = IS_INVALIDCONFIG;
@@ -173,7 +183,59 @@ class Weatherman extends IPSModule
             IPS_SetVariableProfileText('Weatherman.WindSpeed', '', ($windspeed_in_kmh ? ' km/h' : ' m/s'));
         }
 
+        $objList = [];
+        $this->findVariables($this->InstanceID, $objList);
+        foreach ($objList as $obj) {
+            $ident = $obj['ObjectIdent'];
+            if (!in_array($ident, $varList)) {
+                $this->SendDebug(__FUNCTION__, 'unregister variable: ident=' . $ident, 0);
+                $this->UnregisterVariable($ident);
+            }
+        }
+
         $this->SetStatus($status);
+    }
+
+    private function findVariables($objID, &$objList)
+    {
+        $chldIDs = IPS_GetChildrenIDs($objID);
+        foreach ($chldIDs as $chldID) {
+            $obj = IPS_GetObject($chldID);
+            switch ($obj['ObjectType']) {
+                case OBJECTTYPE_VARIABLE:
+                    if (preg_match('#^w_#', $obj['ObjectIdent'], $r)) {
+                        $objList[] = $obj;
+                    }
+                    break;
+                case OBJECTTYPE_CATEGORY:
+                    $this->findVariables($chldID, $objList);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public function UpdateFields(int $module_type, object $use_fields)
+    {
+        $values = [];
+
+        $fieldMap = $this->getFieldMap($module_type);
+
+        foreach ($fieldMap as $map) {
+            $ident = $this->GetArrayElem($map, 'ident', '');
+            $desc = $this->GetArrayElem($map, 'desc', '');
+            $use = false;
+            foreach ($use_fields as $field) {
+                if ($ident == $this->GetArrayElem($field, 'ident', '')) {
+                    $use = (bool) $this->GetArrayElem($field, 'use', false);
+                    break;
+                }
+            }
+            $values[] = ['ident' => $ident, 'desc' => $this->Translate($desc), 'use' => $use];
+        }
+
+        $this->UpdateFormField('use_fields', 'values', json_encode($values));
     }
 
     public function GetConfigurationForm()
@@ -197,8 +259,23 @@ class Weatherman extends IPSModule
         $formElements = [];
         $formElements[] = ['type' => 'Label', 'caption' => 'Weatherman'];
 
+        $opts_module_type = [];
+        $opts_module_type[] = ['caption' => $this->Translate('none'), 'value' => WEATHERMAN_MODULE_NONE];
+        $opts_module_type[] = ['caption' => $this->Translate('Classic'), 'value' => WEATHERMAN_MODULE_CLASSIC];
+        $opts_module_type[] = ['caption' => $this->Translate('Edition'), 'value' => WEATHERMAN_MODULE_EDITION];
+
+        $formElements[] = [
+            'type'     => 'Select',
+            'name'     => 'module_type',
+            'caption'  => 'Module type',
+            'options'  => $opts_module_type,
+            'onChange' => 'Weatherman_UpdateFields($id, $module_type, $use_fields);'
+        ];
+
+        $module_type = $this->ReadPropertyInteger('module_type');
+
         $values = [];
-        $fieldMap = $this->getFieldMap();
+        $fieldMap = $this->getFieldMap($module_type);
         foreach ($fieldMap as $map) {
             $ident = $this->GetArrayElem($map, 'ident', '');
             $desc = $this->GetArrayElem($map, 'desc', '');
@@ -374,7 +451,7 @@ class Weatherman extends IPSModule
 
         $windspeed_in_kmh = $this->ReadPropertyBoolean('windspeed_in_kmh');
 
-        $fieldMap = $this->getFieldMap();
+        $fieldMap = $this->getFieldMap($module_type);
         $this->SendDebug(__FUNCTION__, 'fieldMap="' . print_r($fieldMap, true) . '"', 0);
         $identV = [];
         foreach ($fieldMap as $map) {
@@ -492,9 +569,9 @@ class Weatherman extends IPSModule
         $this->SetValue('LastUpdate', time());
     }
 
-    private function getFieldMap()
+    private function getFieldMap(int $module_type)
     {
-        $map = [
+        $map_classic = [
             [
                 'ident'  => 'w_ip',
                 'desc'   => 'IP-address',
@@ -679,7 +756,178 @@ class Weatherman extends IPSModule
                 'prof'   => 'Weatherman.min',
             ],
         ];
+        $map_edition = [
+            [
+                'ident'  => 'w_ip',
+                'desc'   => 'IP-address',
+                'type'   => VARIABLETYPE_STRING,
+            ],
+            [
+                'ident'  => 'w_temperatur',
+                'desc'   => 'Shadow temperature',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Temperatur',
+            ],
+            [
+                'ident'  => 'w_windchill',
+                'desc'   => 'Windchill',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Windchill',
+            ],
+            [
+                'ident'  => 'w_taupunkt',
+                'desc'   => 'Dewpoint',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Dewpoint',
+            ],
+            [
+                'ident'  => 'w_feuchte_rel',
+                'desc'   => 'Humidity',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Humidity',
+            ],
+            [
+                'ident'  => 'w_feuchte_abs',
+                'desc'   => 'Absolute humidity',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.absHumidity',
+            ],
+            [
+                'ident'  => 'w_regensensor_wert',
+                'desc'   => 'Rain sensor',
+                'type'   => VARIABLETYPE_INTEGER,
+            ],
+            [
+                'ident'  => 'w_regenmelder',
+                'desc'   => 'Rain detector',
+                'type'   => VARIABLETYPE_BOOLEAN,
+                'prof'   => 'Weatherman.RainDetector',
+            ],
+            [
+                'ident'  => 'w_regen_letzte_h',
+                'desc'   => 'Rainfall of last hour',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Rainfall',
+            ],
+            [
+                'ident'  => 'w_regen_mm_heute',
+                'desc'   => 'Rainfall of today',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Rainfall',
+            ],
+            [
+                'ident'  => 'w_regenstunden_heute',
+                'desc'   => 'Hours of rain today',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.hour',
+            ],
+            [
+                'ident'  => 'w_regen_mm_gestern',
+                'desc'   => 'Rainfall of yesterday',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Rainfall',
+            ],
+            [
+                'ident'  => 'w_barometer',
+                'desc'   => 'Air pressure',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Pressure',
+            ],
+            [
+                'ident'  => 'w_barotrend',
+                'desc'   => 'Trend of air pressure',
+                'type'   => VARIABLETYPE_STRING,
+            ],
+            [
+                'ident'  => 'w_wind_1m',
+                'desc'   => 'Speed of gusts of last minute',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.WindSpeed',
+            ],
+            [
+                'ident'  => 'w_windstaerke',
+                'desc'   => 'Windstrength',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.WindStrength',
+            ],
+            [
+                'ident'  => 'w_windrichtung',
+                'desc'   => 'Winddirection',
+                'type'   => VARIABLETYPE_STRING,
+                'prof'   => 'Weatherman.WindDirection',
+            ],
+            [
+                'ident'  => 'w_wind_dir',
+                'desc'   => 'Winddirection',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.WindAngle',
+            ],
+            [
+                'ident'  => 'w_lux',
+                'desc'   => 'Brightness',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Lux',
+            ],
+            [
+                'ident'  => 'w_uv_index',
+                'desc'   => 'UV-Index',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.UV-Index',
+            ],
+            [
+                'ident'  => 'w_sonnentemperatur',
+                'desc'   => 'Sun temperatur',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.Temperatur',
+            ],
+            [
+                'ident'  => 'w_sonne_scheint',
+                'desc'   => 'Sun detector',
+                'type'   => VARIABLETYPE_BOOLEAN,
+                'prof'   => 'Weatherman.SunDetector',
+            ],
+            [
+                'ident'  => 'w_sonnenstunden_heute',
+                'desc'   => 'Hours of sunshine today',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.hour',
+            ],
+            [
+                'ident'  => 'w_elevation',
+                'desc'   => 'Sun elevation',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.Elevation',
+            ],
+            [
+                'ident'  => 'w_azimut',
+                'desc'   => 'Sun azimut',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.Azimut',
+            ],
+            [
+                'ident'  => 'w_minuten_vor_sa',
+                'desc'   => 'Minutes from sunrise',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.min',
+            ],
+            [
+                'ident'  => 'w_minuten_vor_su',
+                'desc'   => 'Minutes from sunset',
+                'type'   => VARIABLETYPE_INTEGER,
+                'prof'   => 'Weatherman.min',
+            ],
+        ];
 
+        switch ($module_type) {
+            case WEATHERMAN_MODULE_CLASSIC:
+                $map = $map_classic;
+                break;
+            case WEATHERMAN_MODULE_EDITION:
+                $map = $map_edition;
+                break;
+            default:
+                $map = [];
+        }
         return $map;
     }
 

@@ -9,6 +9,11 @@
 			"Description": "Beschreibung",
 			"use": "verwenden",
 
+			"Module type": "Modultyp",
+			"none": "nicht angegeben",
+			"Classic": "Klassisch",
+			"Edition": "Edition",
+
 			"Windspeed in km/h instead of m/s": "Windgeschwindigkeit in km/h statt m/s",
 
 			"Options": "Optionen",
@@ -57,6 +62,7 @@
 			"Shadow temperature": "Schattentemperatur",
 			"Sky temperatur": "Himmelstemperatur",
 			"Speed of gusts of last 10m": "Geschwindigkeit der Böen der letzten 10m",
+			"Speed of gusts of last minute": "Geschwindigkeit der Böen der letzten Minute",
 			"Sun azimut": "Sonnenrichtung",
 			"Sun detector": "Sonnenmelder",
 			"Sun elevation": "Sonnenhöhe",
