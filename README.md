@@ -135,6 +135,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.5 @ 01.02.2020 09:07
+  - Unterstützung des "Weatherman-Edition"
+
 - 1.4 @ 30.12.2019 10:56
   - Anpassungen an IPS 5.3
     - Formular-Elemente: 'label' in 'caption' geändert
