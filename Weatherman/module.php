@@ -316,7 +316,7 @@ class Weatherman extends IPSModule
             'values'   => $values
         ];
 
-        $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Variables'];
+        $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Variables', 'expanded' => true];
 
         $items = [];
 
