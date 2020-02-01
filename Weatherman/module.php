@@ -451,6 +451,7 @@ class Weatherman extends IPSModule
 
         $windspeed_in_kmh = $this->ReadPropertyBoolean('windspeed_in_kmh');
 
+        $module_type = $this->ReadPropertyInteger('module_type');
         $fieldMap = $this->getFieldMap($module_type);
         $this->SendDebug(__FUNCTION__, 'fieldMap="' . print_r($fieldMap, true) . '"', 0);
         $identV = [];
