@@ -475,6 +475,11 @@ class Weatherman extends IPSModule
         foreach ($vars as $var) {
             // $this->SendDebug(__FUNCTION__, 'var=' . print_r($var, true), 0);
             $ident = $this->GetArrayElem($var, 'homematic_name', '');
+            // hotfix wegen umbenannter Variable
+            if ($ident == 'w_rtest') {
+                $ident = 'w_regenstunden_heute';
+                $this->SendDebug(__FUNCTION__, 'use "w_rtest" as "' . $ident . '"', 0);
+            }
             $value = $this->GetArrayElem($var, 'value', '');
 
             $found = false;
@@ -840,8 +845,14 @@ class Weatherman extends IPSModule
                 'type'   => VARIABLETYPE_STRING,
             ],
             [
-                'ident'  => 'w_wind_1m',
+                'ident'  => 'w_wind_1min',
                 'desc'   => 'Speed of gusts of last minute',
+                'type'   => VARIABLETYPE_FLOAT,
+                'prof'   => 'Weatherman.WindSpeed',
+            ],
+            [
+                'ident'  => 'w_wind_10min',
+                'desc'   => 'Speed of gusts of last 10 minutes',
                 'type'   => VARIABLETYPE_FLOAT,
                 'prof'   => 'Weatherman.WindSpeed',
             ],
