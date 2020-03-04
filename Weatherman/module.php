@@ -476,9 +476,10 @@ class Weatherman extends IPSModule
             // $this->SendDebug(__FUNCTION__, 'var=' . print_r($var, true), 0);
             $ident = $this->GetArrayElem($var, 'homematic_name', '');
             // hotfix wegen umbenannter Variable
-            if ($ident == 'w_rtest') {
+            if (in_array($ident, ['w_rtest', 'w_regen_stunden_heute'])) {
+                $_ident = $ident;
                 $ident = 'w_regenstunden_heute';
-                $this->SendDebug(__FUNCTION__, 'use "w_rtest" as "' . $ident . '"', 0);
+                $this->SendDebug(__FUNCTION__, 'use "' . $_ident . '" as "' . $ident . '"', 0);
             }
             $value = $this->GetArrayElem($var, 'value', '');
 
