@@ -134,7 +134,7 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.6 @ 25.02.2020 08:07
+- 1.6 @ 06.03.2020 18:41
   - Bugfix für "Weatherman-Edition"
     - Variable "w_regenstunden_heute" wird, je nach Version, als "w_rtest" oder "w_regen_stunden_heute" übertragen; wird gleich behandelt
     - Variable "w_wind_1min" hies fehlerhafterweise "w_wind_1m", "w_wind_10min" fehlte
