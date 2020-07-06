@@ -482,6 +482,7 @@ class Weatherman extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'use "' . $_ident . '" as "' . $ident . '"', 0);
             }
             $value = $this->GetArrayElem($var, 'value', '');
+            $unit = $this->GetArrayElem($var, 'unit', '');
 
             $found = false;
 
@@ -512,8 +513,16 @@ class Weatherman extends IPSModule
 
                     $this->SendDebug(__FUNCTION__, 'use ident "' . $ident . '", value=' . $value, 0);
 
-                    if ($varprof == 'Weatherman.WindSpeed' && $windspeed_in_kmh) {
-                        $value = floatval($value) * 3.6;
+                    if ($varprof == 'Weatherman.WindSpeed') {
+                        if ($unit == 'km/h') {
+                            if (!$windspeed_in_kmh) {
+                                $value = floatval($value) / 3.6;
+                            }
+                        } else {
+                            if ($windspeed_in_kmh) {
+                                $value = floatval($value) * 3.6;
+                            }
+                        }
                     }
 
                     if ($ident == 'w_barotrend') {

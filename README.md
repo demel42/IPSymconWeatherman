@@ -134,6 +134,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.7 @ 06.07.2020 09:18
+  - Bugfix für "Weatherman-Edition"
+    Windgeschwindigkeiten werden nun per "km/h" und nicht mehr als "m/s" übertragen; die übertragenen Einheit wird nun aus den Daten gelesen
+
 - 1.6 @ 06.03.2020 18:41
   - Bugfix für "Weatherman-Edition"
     - Variable "w_regenstunden_heute" wird, je nach Version, als "w_rtest" oder "w_regen_stunden_heute" übertragen; wird gleich behandelt
