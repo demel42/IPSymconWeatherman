@@ -134,6 +134,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.8 @ 13.07.2020 14:56
+  - LICENSE.md hinzugefügt
+
 - 1.7 @ 06.07.2020 09:18
   - Bugfix für "Weatherman-Edition"
     Windgeschwindigkeiten werden nun per "km/h" und nicht mehr als "m/s" übertragen; die übertragenen Einheit wird nun aus den Daten gelesen
