@@ -2,23 +2,19 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../libs/common.php';  // globale Funktionen
-
-if (!defined('WEATHERMAN_MODULE_NONE')) {
-    define('WEATHERMAN_MODULE_NONE', 0);
-    define('WEATHERMAN_MODULE_CLASSIC', 1);
-    define('WEATHERMAN_MODULE_EDITION', 2);
-}
+require_once __DIR__ . '/../libs/common.php'; // globale Funktionen
+require_once __DIR__ . '/../libs/local.php';  // lokale Funktionen
 
 class Weatherman extends IPSModule
 {
-    use WeathermanCommon;
+    use WeathermanCommonLib;
+    use WeathermanLocalLib;
 
     public function Create()
     {
         parent::Create();
 
-        $this->RegisterPropertyInteger('module_type', WEATHERMAN_MODULE_CLASSIC);
+        $this->RegisterPropertyInteger('module_type', self::$WEATHERMAN_MODULE_CLASSIC);
         $this->RegisterPropertyString('use_fields', '[]');
 
         $this->RegisterPropertyBoolean('windspeed_in_kmh', false);
@@ -126,7 +122,7 @@ class Weatherman extends IPSModule
             if (!(in_array('w_temperatur', $varList) && in_array('w_feuchte_rel', $varList))) {
                 $this->SendDebug(__FUNCTION__, '"with_heatindex" needs "w_temperatur", "w_feuchte_rel"', 0);
                 $with_heatindex = false;
-                $status = IS_INVALIDCONFIG;
+                $status = self::$IS_INVALIDCONFIG;
             }
         }
         $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), VARIABLETYPE_FLOAT, 'Weatherman.Heatindex', $vpos++, $with_heatindex);
@@ -137,7 +133,7 @@ class Weatherman extends IPSModule
             if (!(in_array('w_barometer', $varList) && in_array('w_temperatur', $varList) && $altitude > 0)) {
                 $this->SendDebug(__FUNCTION__, '"with_absolute_pressure" needs "w_barometer", "w_temperatur" and "altitude"', 0);
                 $with_absolute_pressure = false;
-                $status = IS_INVALIDCONFIG;
+                $status = self::$IS_INVALIDCONFIG;
             }
         }
         $this->MaintainVariable('AbsolutePressure', $this->Translate('Absolute pressure'), VARIABLETYPE_FLOAT, 'Weatherman.Pressure', $vpos++, $with_absolute_pressure);
@@ -147,7 +143,7 @@ class Weatherman extends IPSModule
             if (!(in_array('w_windstaerke', $varList))) {
                 $this->SendDebug(__FUNCTION__, '"with_windstrength_text" needs "w_windstaerke"', 0);
                 $with_windstrength_text = false;
-                $status = IS_INVALIDCONFIG;
+                $status = self::$IS_INVALIDCONFIG;
             }
         }
         $this->MaintainVariable('WindStrengthText', $this->Translate('Windstrength'), VARIABLETYPE_STRING, '', $vpos++, $with_windstrength_text);
@@ -157,14 +153,14 @@ class Weatherman extends IPSModule
             if (!(in_array('w_regen_letzte_h', $varList))) {
                 $this->SendDebug(__FUNCTION__, '"with_precipitation_level" needs "w_regen_letzte_h"', 0);
                 $with_precipitation_level = false;
-                $status = IS_INVALIDCONFIG;
+                $status = self::$IS_INVALIDCONFIG;
             }
             $regensensor_niesel = $this->ReadPropertyInteger('regensensor_niesel');
             if ($regensensor_niesel > 0) {
                 if (!(in_array('w_regensensor_wert', $varList))) {
                     $this->SendDebug(__FUNCTION__, '"regensensor_niesel" needs "w_regensensor_wert"', 0);
                     $regensensor_niesel = 0;
-                    $status = IS_INVALIDCONFIG;
+                    $status = self::$IS_INVALIDCONFIG;
                 }
             }
         }
@@ -260,9 +256,9 @@ class Weatherman extends IPSModule
         $formElements[] = ['type' => 'Label', 'caption' => 'Weatherman'];
 
         $opts_module_type = [];
-        $opts_module_type[] = ['caption' => $this->Translate('none'), 'value' => WEATHERMAN_MODULE_NONE];
-        $opts_module_type[] = ['caption' => $this->Translate('Classic'), 'value' => WEATHERMAN_MODULE_CLASSIC];
-        $opts_module_type[] = ['caption' => $this->Translate('Edition'), 'value' => WEATHERMAN_MODULE_EDITION];
+        $opts_module_type[] = ['caption' => $this->Translate('none'), 'value' => self::$WEATHERMAN_MODULE_NONE];
+        $opts_module_type[] = ['caption' => $this->Translate('Classic'), 'value' => self::$WEATHERMAN_MODULE_CLASSIC];
+        $opts_module_type[] = ['caption' => $this->Translate('Edition'), 'value' => self::$WEATHERMAN_MODULE_EDITION];
 
         $formElements[] = [
             'type'     => 'Select',
@@ -941,10 +937,10 @@ class Weatherman extends IPSModule
         ];
 
         switch ($module_type) {
-            case WEATHERMAN_MODULE_CLASSIC:
+            case self::$WEATHERMAN_MODULE_CLASSIC:
                 $map = $map_classic;
                 break;
-            case WEATHERMAN_MODULE_EDITION:
+            case self::$WEATHERMAN_MODULE_EDITION:
                 $map = $map_edition;
                 break;
             default:

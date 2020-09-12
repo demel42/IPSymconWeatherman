@@ -134,8 +134,11 @@ GUIDs
 
 ## 7. Versions-Historie
 
-- 1.8 @ 13.07.2020 14:56
+- 1.8 @ 12.09.2020 11:40 (beta)
   - LICENSE.md hinzugefügt
+  - lokale Funktionen aus common.php in locale.php verlagert
+  - Traits des Moduls haben nun Postfix "Lib"
+  - define's durch statische Klassen-Variablen ersetzt
 
 - 1.7 @ 06.07.2020 09:18
   - Bugfix für "Weatherman-Edition"
