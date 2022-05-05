@@ -2,13 +2,22 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../libs/common.php'; // globale Funktionen
-require_once __DIR__ . '/../libs/local.php';  // lokale Funktionen
+require_once __DIR__ . '/../libs/common.php';
+require_once __DIR__ . '/../libs/local.php';
 
 class Weatherman extends IPSModule
 {
-    use WeathermanCommonLib;
+    use Weatherman\StubsCommonLib;
     use WeathermanLocalLib;
+
+    private $ModuleDir;
+
+    public function __construct(string $InstanceID)
+    {
+        parent::__construct($InstanceID);
+
+        $this->ModuleDir = __DIR__;
+    }
 
     public function Create()
     {
@@ -26,76 +35,108 @@ class Weatherman extends IPSModule
         $this->RegisterPropertyBoolean('with_precipitation_level', false);
         $this->RegisterPropertyInteger('regensensor_niesel', 0);
 
-        $this->CreateVarProfile('Weatherman.Wifi', VARIABLETYPE_INTEGER, ' dBm', 0, 0, 0, 0, 'Intensity');
+        $this->RegisterAttributeString('UpdateInfo', '');
 
-        $this->CreateVarProfile('Weatherman.sec', VARIABLETYPE_INTEGER, ' s', 0, 0, 0, 0, 'Clock');
-        $this->CreateVarProfile('Weatherman.min', VARIABLETYPE_INTEGER, ' m', 0, 0, 0, 0, 'Clock');
-        $this->CreateVarProfile('Weatherman.hour', VARIABLETYPE_INTEGER, ' h', 0, 0, 0, 0, 'Clock');
-
-        $this->CreateVarProfile('Weatherman.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature');
-        $this->CreateVarProfile('Weatherman.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops');
-        $this->CreateVarProfile('Weatherman.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 10, 100, 0, 0, 'Drops');
-        $this->CreateVarProfile('Weatherman.Pressure', VARIABLETYPE_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Weatherman.Dewpoint', VARIABLETYPE_FLOAT, ' °C', 0, 30, 0, 0, 'Drops');
-        $this->CreateVarProfile('Weatherman.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature');
-        $this->CreateVarProfile('Weatherman.Windchill', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature');
-        $this->CreateVarProfile('Weatherman.Pressure', VARIABLETYPE_FLOAT, ' mbar', 500, 1200, 0, 0, 'Gauge');
-        $this->CreateVarProfile('Weatherman.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 100, 0, 0, 'WindSpeed'); // m/s
-        $this->CreateVarProfile('Weatherman.WindStrength', VARIABLETYPE_INTEGER, ' bft', 0, 13, 0, 0, 'WindSpeed');
-        $this->CreateVarProfile('Weatherman.WindAngle', VARIABLETYPE_INTEGER, ' °', 0, 360, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('Weatherman.WindDirection', VARIABLETYPE_STRING, '', 0, 0, 0, 0, 'WindDirection');
-        $this->CreateVarProfile('Weatherman.Rainfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Rainfall');
-        $this->CreateVarProfile('Weatherman.Precipitation', VARIABLETYPE_FLOAT, ' mm/h', 0, 60, 0, 1, 'Rainfall');
-        $this->CreateVarProfile('Weatherman.Lux', VARIABLETYPE_FLOAT, ' lx', 0, 0, 0, 0, 'Sun');
-        $this->CreateVarProfile('Weatherman.Azimut', VARIABLETYPE_INTEGER, ' °', 0, 0, 0, 0, '');
-        $this->CreateVarProfile('Weatherman.Elevation', VARIABLETYPE_INTEGER, ' °', 0, 0, 0, 0, '');
-
-        $associations = [];
-        $associations[] = ['Wert' => false, 'Name' => $this->Translate('Off'), 'Farbe' => -1];
-        $associations[] = ['Wert' => true,  'Name' => $this->Translate('On'), 'Farbe' => 0xEE0000];
-        $this->CreateVarProfile('Weatherman.RainDetector', VARIABLETYPE_BOOLEAN, '', 0, 0, 0, 0, '', $associations);
-
-        $associations = [];
-        $associations[] = ['Wert' => false, 'Name' => $this->Translate('Off'), 'Farbe' => -1];
-        $associations[] = ['Wert' => true,  'Name' => $this->Translate('On'), 'Farbe' => 0xFFFF99];
-        $this->CreateVarProfile('Weatherman.SunDetector', VARIABLETYPE_BOOLEAN, '', 0, 0, 0, 0, '', $associations);
-
-        $associations = [];
-        $associations[] = ['Wert' =>  0, 'Name' => '%.1f', 'Farbe' => 0x80FF00];
-        $associations[] = ['Wert' =>  3, 'Name' => '%.1f', 'Farbe' => 0xFFFF00];
-        $associations[] = ['Wert' =>  6, 'Name' => '%.1f', 'Farbe' => 0xFF8040];
-        $associations[] = ['Wert' =>  8, 'Name' => '%.1f', 'Farbe' => 0xFF0000];
-        $associations[] = ['Wert' => 11, 'Name' => '%.1f', 'Farbe' => 0xFF00FF];
-        $this->CreateVarProfile('Weatherman.UV-Index', VARIABLETYPE_FLOAT, '', 0, 12, 0, 1, 'Sun', $associations);
-
-        $associations = [];
-        $associations[] = ['Wert' =>  0, 'Name' => $this->Translate('dry'), 'Farbe' => -1];
-        $associations[] = ['Wert' =>  1, 'Name' => $this->Translate('drizzle'), 'Farbe' => -1];
-        $associations[] = ['Wert' =>  2, 'Name' => $this->Translate('mist'), 'Farbe' => -1];
-        $associations[] = ['Wert' =>  3, 'Name' => $this->Translate('light rain'), 'Farbe' => -1];
-        $associations[] = ['Wert' =>  4, 'Name' => $this->Translate('moderate rain'), 'Farbe' => -1];
-        $associations[] = ['Wert' =>  5, 'Name' => $this->Translate('heavy rain'), 'Farbe' => -1];
-        $associations[] = ['Wert' =>  6, 'Name' => $this->Translate('showers'), 'Farbe' => -1];
-        $associations[] = ['Wert' =>  7, 'Name' => $this->Translate('rain storm'), 'Farbe' => -1];
-        $associations[] = ['Wert' =>  8, 'Name' => $this->Translate('downpour'), 'Farbe' => -1];
-        $this->CreateVarProfile('Weatherman.PrecipitationLevel', VARIABLETYPE_INTEGER, '', 0, 8, 0, 1, 'Rainfall', $associations);
+		$this->InstallVarProfiles(false);
 
         $this->RequireParent('{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}');
+    }
+
+    private function CheckModuleConfiguration()
+    {
+        $r = [];
+
+        $varList = [];
+
+        $use_fields = json_decode($this->ReadPropertyString('use_fields'), true);
+        $module_type = $this->ReadPropertyInteger('module_type');
+        $fieldMap = $this->getFieldMap($module_type);
+        foreach ($fieldMap as $map) {
+            $ident = $this->GetArrayElem($map, 'ident', '');
+            $use = false;
+            foreach ($use_fields as $field) {
+                if ($ident == $this->GetArrayElem($field, 'ident', '')) {
+                    $use = (bool) $this->GetArrayElem($field, 'use', false);
+                    break;
+                }
+            }
+            if ($use) {
+                $varList[] = $ident;
+            }
+        }
+
+        $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
+        if ($with_heatindex) {
+            if (!(in_array('w_temperatur', $varList) && in_array('w_feuchte_rel', $varList))) {
+                $this->SendDebug(__FUNCTION__, '"with_heatindex" needs "w_temperatur", "w_feuchte_rel"', 0);
+                $r[] = $this->Translate('Heatindex needs "w_temperatur", "w_feuchte_rel"');
+            }
+        }
+
+        $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
+        if ($with_absolute_pressure) {
+            $altitude = $this->ReadPropertyInteger('altitude');
+            if (!(in_array('w_barometer', $varList) && in_array('w_temperatur', $varList) && $altitude > 0)) {
+                $this->SendDebug(__FUNCTION__, '"with_absolute_pressure" needs "w_barometer", "w_temperatur" and "altitude"', 0);
+                $r[] = $this->Translate('Absolute pressure needs "w_barometer", "w_temperatur" and the altitude');
+            }
+        }
+
+        $with_windstrength_text = $this->ReadPropertyBoolean('with_windstrength_text');
+        if ($with_windstrength_text) {
+            if (!(in_array('w_windstaerke', $varList))) {
+                $this->SendDebug(__FUNCTION__, '"with_windstrength_text" needs "w_windstaerke"', 0);
+                $r[] = $this->Translate('Windstrength as text needs "w_windstaerke"');
+            }
+        }
+
+        $with_precipitation_level = $this->ReadPropertyBoolean('with_precipitation_level');
+        if ($with_precipitation_level) {
+            if (!(in_array('w_regen_letzte_h', $varList))) {
+                $this->SendDebug(__FUNCTION__, '"with_precipitation_level" needs "w_regen_letzte_h"', 0);
+                $r[] = $this->Translate('Precipitation level needs "w_regen_letzte_h"');
+            }
+            $regensensor_niesel = $this->ReadPropertyInteger('regensensor_niesel');
+            if ($regensensor_niesel > 0) {
+                if (!(in_array('w_regensensor_wert', $varList))) {
+                    $this->SendDebug(__FUNCTION__, '"regensensor_niesel" needs "w_regensensor_wert"', 0);
+                    $r[] = $this->Translate('use rainsensor to detect drizzle needs "w_regensensor_wert"');
+                }
+            }
+        }
+
+        return $r;
     }
 
     public function ApplyChanges()
     {
         parent::ApplyChanges();
 
-        $status = IS_ACTIVE;
+        $this->MaintainReferences();
 
-        $module_type = $this->ReadPropertyInteger('module_type');
+        if ($this->CheckPrerequisites() != false) {
+            $this->SetStatus(self::$IS_INVALIDPREREQUISITES);
+            return;
+        }
+
+        if ($this->CheckUpdate() != false) {
+            $this->SetStatus(self::$IS_UPDATEUNCOMPLETED);
+            return;
+        }
+
+        if ($this->CheckConfiguration() != false) {
+            $this->SetStatus(self::$IS_INVALIDCONFIG);
+            return;
+        }
 
         $vpos = 1;
+
         $varList = [];
 
         $use_fields = json_decode($this->ReadPropertyString('use_fields'), true);
+        $module_type = $this->ReadPropertyInteger('module_type');
         $fieldMap = $this->getFieldMap($module_type);
+
         foreach ($fieldMap as $map) {
             $ident = $this->GetArrayElem($map, 'ident', '');
             $use = false;
@@ -118,53 +159,15 @@ class Weatherman extends IPSModule
         $vpos = 80;
 
         $with_heatindex = $this->ReadPropertyBoolean('with_heatindex');
-        if ($with_heatindex) {
-            if (!(in_array('w_temperatur', $varList) && in_array('w_feuchte_rel', $varList))) {
-                $this->SendDebug(__FUNCTION__, '"with_heatindex" needs "w_temperatur", "w_feuchte_rel"', 0);
-                $with_heatindex = false;
-                $status = self::$IS_INVALIDCONFIG;
-            }
-        }
         $this->MaintainVariable('Heatindex', $this->Translate('Heatindex'), VARIABLETYPE_FLOAT, 'Weatherman.Heatindex', $vpos++, $with_heatindex);
 
         $with_absolute_pressure = $this->ReadPropertyBoolean('with_absolute_pressure');
-        if ($with_absolute_pressure) {
-            $altitude = $this->ReadPropertyInteger('altitude');
-            if (!(in_array('w_barometer', $varList) && in_array('w_temperatur', $varList) && $altitude > 0)) {
-                $this->SendDebug(__FUNCTION__, '"with_absolute_pressure" needs "w_barometer", "w_temperatur" and "altitude"', 0);
-                $with_absolute_pressure = false;
-                $status = self::$IS_INVALIDCONFIG;
-            }
-        }
         $this->MaintainVariable('AbsolutePressure', $this->Translate('Absolute pressure'), VARIABLETYPE_FLOAT, 'Weatherman.Pressure', $vpos++, $with_absolute_pressure);
 
         $with_windstrength_text = $this->ReadPropertyBoolean('with_windstrength_text');
-        if ($with_windstrength_text) {
-            if (!(in_array('w_windstaerke', $varList))) {
-                $this->SendDebug(__FUNCTION__, '"with_windstrength_text" needs "w_windstaerke"', 0);
-                $with_windstrength_text = false;
-                $status = self::$IS_INVALIDCONFIG;
-            }
-        }
         $this->MaintainVariable('WindStrengthText', $this->Translate('Windstrength'), VARIABLETYPE_STRING, '', $vpos++, $with_windstrength_text);
 
         $with_precipitation_level = $this->ReadPropertyBoolean('with_precipitation_level');
-        if ($with_precipitation_level) {
-            if (!(in_array('w_regen_letzte_h', $varList))) {
-                $this->SendDebug(__FUNCTION__, '"with_precipitation_level" needs "w_regen_letzte_h"', 0);
-                $with_precipitation_level = false;
-                $status = self::$IS_INVALIDCONFIG;
-            }
-            $regensensor_niesel = $this->ReadPropertyInteger('regensensor_niesel');
-            if ($regensensor_niesel > 0) {
-                if (!(in_array('w_regensensor_wert', $varList))) {
-                    $this->SendDebug(__FUNCTION__, '"regensensor_niesel" needs "w_regensensor_wert"', 0);
-                    $regensensor_niesel = 0;
-                    $status = self::$IS_INVALIDCONFIG;
-                }
-            }
-        }
-
         $this->MaintainVariable('PrecipitationLevel', $this->Translate('Precipitation level'), VARIABLETYPE_INTEGER, 'Weatherman.PrecipitationLevel', $vpos++, $with_precipitation_level);
 
         $vpos = 100;
@@ -189,7 +192,7 @@ class Weatherman extends IPSModule
             }
         }
 
-        $this->SetStatus($status);
+        $this->SetStatus(IS_ACTIVE);
     }
 
     private function findVariables($objID, &$objList)
@@ -217,10 +220,8 @@ class Weatherman extends IPSModule
         $values = [];
 
         $fieldMap = $this->getFieldMap($module_type);
-
         foreach ($fieldMap as $map) {
-            $ident = $this->GetArrayElem($map, 'ident', '');
-            $desc = $this->GetArrayElem($map, 'desc', '');
+            $ident = $map['ident'];
             $use = false;
             foreach ($use_fields as $field) {
                 if ($ident == $this->GetArrayElem($field, 'ident', '')) {
@@ -228,7 +229,11 @@ class Weatherman extends IPSModule
                     break;
                 }
             }
-            $values[] = ['ident' => $ident, 'desc' => $this->Translate($desc), 'use' => $use];
+            $values[] = [
+                'ident' => $ident,
+                'desc'  => $this->Translate($map['desc']),
+                'use'   => $use
+            ];
         }
 
         $this->UpdateFormField('use_fields', 'values', json_encode($values));
@@ -236,123 +241,131 @@ class Weatherman extends IPSModule
 
     protected function GetFormElements()
     {
-        $formElements = [];
-        $formElements[] = ['type' => 'Label', 'caption' => 'Weatherman'];
+        $formElements = $this->GetCommonFormElements('Weatherman');
 
-        $opts_module_type = [];
-        $opts_module_type[] = ['caption' => $this->Translate('none'), 'value' => self::$WEATHERMAN_MODULE_NONE];
-        $opts_module_type[] = ['caption' => $this->Translate('Classic'), 'value' => self::$WEATHERMAN_MODULE_CLASSIC];
-        $opts_module_type[] = ['caption' => $this->Translate('Edition'), 'value' => self::$WEATHERMAN_MODULE_EDITION];
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            return $formElements;
+        }
 
         $formElements[] = [
             'type'     => 'Select',
             'name'     => 'module_type',
             'caption'  => 'Module type',
-            'options'  => $opts_module_type,
+            'options'  => [
+                [
+                    'caption' => $this->Translate('none'),
+                    'value'   => self::$WEATHERMAN_MODULE_NONE,
+                ],
+                [
+                    'caption' => $this->Translate('Classic'),
+                    'value'   => self::$WEATHERMAN_MODULE_CLASSIC,
+                ],
+                [
+                    'caption' => $this->Translate('Edition'),
+                    'value'   => self::$WEATHERMAN_MODULE_EDITION,
+                ],
+            ],
             'onChange' => 'Weatherman_UpdateFields($id, $module_type, $use_fields);'
         ];
 
-        $module_type = $this->ReadPropertyInteger('module_type');
-
         $values = [];
+        $module_type = $this->ReadPropertyInteger('module_type');
         $fieldMap = $this->getFieldMap($module_type);
         foreach ($fieldMap as $map) {
-            $ident = $this->GetArrayElem($map, 'ident', '');
-            $desc = $this->GetArrayElem($map, 'desc', '');
-            $values[] = ['ident' => $ident, 'desc' => $this->Translate($desc)];
+            $values[] = [
+                'ident' => $map['ident'],
+                'desc'  => $this->Translate($map['desc']),
+            ];
         }
 
-        $columns = [];
-        $columns[] = [
-            'caption' => 'Name',
-            'name'    => 'ident',
-            'width'   => '200px',
-            'save'    => true
-        ];
-        $columns[] = [
-            'caption' => 'Description',
-            'name'    => 'desc',
-            'width'   => 'auto'
-        ];
-        $columns[] = [
-            'caption' => 'use',
-            'name'    => 'use',
-            'width'   => '100px',
-            'edit'    => [
-                'type' => 'CheckBox'
-            ]
-        ];
-
-        $items = [];
-
-        $items[] = [
-            'type'     => 'List',
-            'name'     => 'use_fields',
-            'caption'  => 'available variables',
-            'rowCount' => count($values),
-            'add'      => false,
-            'delete'   => false,
-            'columns'  => $columns,
-            'values'   => $values
-        ];
-
-        $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Variables', 'expanded' => true];
-
-        $items = [];
-
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'windspeed_in_kmh',
-            'caption' => 'Windspeed in km/h instead of m/s'
+        $formElements[] = [
+            'type'  => 'ExpansionPanel',
+            'items' => [
+                [
+                    'type'     => 'List',
+                    'name'     => 'use_fields',
+                    'caption'  => 'available variables',
+                    'rowCount' => count($values),
+                    'add'      => false,
+                    'delete'   => false,
+                    'columns'  => [
+                        [
+                            'name'    => 'ident',
+                            'width'   => '200px',
+                            'save'    => true,
+                            'caption' => 'Name',
+                        ],
+                        [
+                            'name'    => 'desc',
+                            'width'   => 'auto',
+                            'caption' => 'Description',
+                        ],
+                        [
+                            'name'    => 'use',
+                            'width'   => '100px',
+                            'edit'    => [
+                                'type' => 'CheckBox'
+                            ],
+                            'caption' => 'use',
+                        ],
+                    ],
+                    'values'   => $values,
+                ],
+            ],
+            'caption'  => 'Variables',
         ];
 
-        $items[] = [
-            'type'    => 'NumberSpinner',
-            'name'    => 'altitude',
-            'caption' => 'Station altitude'
+        $formElements[] = [
+            'type'  => 'ExpansionPanel',
+            'items' => [
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'windspeed_in_kmh',
+                    'caption' => 'Windspeed in km/h instead of m/s'
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'name'    => 'altitude',
+                    'caption' => 'Station altitude'
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => 'additional Calculations'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_heatindex',
+                    'caption' => ' ... Heatindex (needs "w_temperatur", "w_feuchte_rel")'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_absolute_pressure',
+                    'caption' => ' ... absolute pressure (needs "w_barometer", "w_temperatur" and the altitude)'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_windstrength_text',
+                    'caption' => ' ... Windstrength as text (needs "w_windstaerke")'
+                ],
+                [
+                    'type'    => 'CheckBox',
+                    'name'    => 'with_precipitation_level',
+                    'caption' => ' ... Precipitation level (needs "w_regen_letzte_h")'
+                ],
+                [
+                    'type'    => 'Label',
+                    'caption' => ' ... use rainsensor to detect drizzle (needs "w_regensensor_wert")',
+                ],
+                [
+                    'type'    => 'NumberSpinner',
+                    'minumum' => 0,
+                    'maximum' => 100,
+                    'name'    => 'regensensor_niesel',
+                    'caption' => 'minumum rainsensor-value',
+                ],
+            ],
+            'caption' => 'Options',
         ];
-
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => 'additional Calculations'
-        ];
-
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_heatindex',
-            'caption' => ' ... Heatindex (needs "w_temperatur", "w_feuchte_rel")'
-        ];
-
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_absolute_pressure',
-            'caption' => ' ... absolute pressure (needs "w_barometer", "w_temperatur" and the altitude)'
-        ];
-
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_windstrength_text',
-            'caption' => ' ... Windstrength as text (needs "w_windstaerke")'
-        ];
-
-        $items[] = [
-            'type'    => 'CheckBox',
-            'name'    => 'with_precipitation_level',
-            'caption' => ' ... Precipitation level (needs "w_regen_letzte_h")'
-        ];
-        $items[] = [
-            'type'    => 'Label',
-            'caption' => ' ... use rainsensor to detect drizzle (needs "w_regensensor_wert")',
-        ];
-        $items[] = [
-            'type'    => 'NumberSpinner',
-            'name'    => 'regensensor_niesel',
-            'caption' => 'minumum rainsensor-value',
-            'minumum' => 0,
-            'maximum' => 100,
-        ];
-
-        $formElements[] = ['type' => 'ExpansionPanel', 'items' => $items, 'caption' => 'Options'];
 
         return $formElements;
     }
@@ -361,7 +374,31 @@ class Weatherman extends IPSModule
     {
         $formActions = [];
 
+        if ($this->GetStatus() == self::$IS_UPDATEUNCOMPLETED) {
+            $formActions[] = $this->GetCompleteUpdateFormAction();
+
+            $formActions[] = $this->GetInformationFormAction();
+            $formActions[] = $this->GetReferencesFormAction();
+
+            return $formActions;
+        }
+
+        $formActions[] = $this->GetInformationFormAction();
+        $formActions[] = $this->GetReferencesFormAction();
+
         return $formActions;
+    }
+
+    public function RequestAction($ident, $value)
+    {
+        if ($this->CommonRequestAction($ident, $value)) {
+            return;
+        }
+        switch ($ident) {
+            default:
+                $this->SendDebug(__FUNCTION__, 'invalid ident ' . $ident, 0);
+                break;
+        }
     }
 
     public function ReceiveData($msg)
@@ -1016,15 +1053,15 @@ class Weatherman extends IPSModule
     private function convertPrecipitation2Level(float $rain_1h)
     {
         $rain_map = [
-            0 => 0,		// trocken
-            1 => 0.01,	// Nieselregen
-            2 => 0.1,	// Sprühregen
-            3 => 0.4,	// leichter Regen
-            4 => 1.5,	// mäßiger Regen
-            5 => 4,		// starker Regen
-            6 => 10,	// Schauerregen
-            7 => 35,	// Gewitterregen
-            8 => 100,	// Sturzregen
+            self::$PRECIPITATION_DRY      => 0,		// trocken
+            self::$PRECIPITATION_DRIZZLE  => 0.01,	// Nieselregen
+            self::$PRECIPITATION_MIST     => 0.1,	// Sprühregen
+            self::$PRECIPITATION_LIGHT    => 0.4,	// leichter Regen
+            self::$PRECIPITATION_MODERATE => 1.5,	// mäßiger Regen
+            self::$PRECIPITATION_HEAVY    => 4,		// starker Regen
+            self::$PRECIPITATION_SHOWERS  => 10,	// Schauerregen
+            self::$PRECIPITATION_STORM    => 35,	// Gewitterregen
+            self::$PRECIPITATION_DOWNPOUR => 100,	// Sturzregen
         ];
 
         $precipitation = 0;

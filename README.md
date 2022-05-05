@@ -1,6 +1,6 @@
 # IPSymconWeatherman
 
-[![IPS-Version](https://img.shields.io/badge/Symcon_Version-5.3+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
+[![IPS-Version](https://img.shields.io/badge/Symcon_Version-6.0+-red.svg)](https://www.symcon.de/service/dokumentation/entwicklerbereich/sdk-tools/sdk-php/)
 ![Code](https://img.shields.io/badge/Code-PHP-blue.svg)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
@@ -24,7 +24,7 @@ Getestet mit der Weatherman-Version **123**.
 
 ## 2. Voraussetzungen
 
- - IP-Symcon ab Version 5.3
+ - IP-Symcon ab Version 6.0
  - eine Weatherman-Wetterstation
 
 ## 3. Installation
@@ -110,16 +110,35 @@ damit schickt Weatherman minütlich die Daten sowie bei bestimmten Zuständen (R
 #### Variablenprofile
 
 Es werden folgende Variablenprofile angelegt:
+
 * Boolean<br>
-Weatherman.RainDetector, Weatherman.SunDetector
+Weatherman.RainDetector,
+Weatherman.SunDetector
 
 * Integer<br>
-Weatherman.Azimut, Weatherman.Elevation, Weatherman.hour, Weatherman.min, Weatherman.PrecipitationLevel, Weatherman.sec, Weatherman.Wifi,
-Weatherman.WindAngle, Weatherman.WindStrength
+Weatherman.Azimut,
+Weatherman.Elevation,
+Weatherman.hour,
+Weatherman.min,
+Weatherman.PrecipitationLevel,
+Weatherman.sec,
+Weatherman.Wifi,
+Weatherman.WindAngle,
+Weatherman.WindStrength
 
 * Float<br>
-Weatherman.absHumidity, Weatherman.Dewpoint, Weatherman.Heatindex, Weatherman.Humidity, Weatherman.Lux, Weatherman.Precipitation,
-Weatherman.Pressure, Weatherman.Rainfall, Weatherman.RainStrength, Weatherman.Temperatur, Weatherman.UV-Index, Weatherman.Windchill,
+Weatherman.absHumidity,
+Weatherman.Dewpoint,
+Weatherman.Heatindex,
+Weatherman.Humidity,
+Weatherman.Lux,
+Weatherman.Precipitation,
+Weatherman.Pressure,
+Weatherman.Rainfall,
+Weatherman.RainStrength,
+Weatherman.Temperatur,
+Weatherman.UV-Index,
+Weatherman.Windchill,
 Weatherman.WindSpeed
 
 * String<br>
@@ -133,6 +152,13 @@ GUIDs
   - Weatherman: `{8AB8B668-6300-0B27-DC40-E88F67805157}`
 
 ## 7. Versions-Historie
+
+- 1.10 @ 04.05.2022 18:37
+  - IPS-Version ist nun minimal 6.0
+  - Anzeige der Modul/Bibliotheks-Informationen, Referenzen und Timer
+  - Implememtierung einer Update-Logik
+  - Überlagerung von Translate und Aufteilung von locale.json in 3 translation.json (Modul, libs und CommonStubs)
+  - diverse interne Änderungen
 
 - 1.9 @ 18.12.2020 14:57
   - PHP_CS_FIXER_IGNORE_ENV=1 in github/workflows/style.yml eingefügt

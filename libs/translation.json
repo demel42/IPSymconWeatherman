@@ -1,0 +1,23 @@
+{
+	"translations": {
+		"de": {
+			"__variableprofile__": "Weatherman.RainDetector",
+			"__variableprofile__": "Weatherman.SunDetector",
+			"On": "Ein",
+			"Off": "Aus",
+
+			"__variableprofile__": "Weatherman.PrecipitationLevel",
+			"dry": "trocken",
+			"drizzle": "Nieselregen",
+			"mist": "Sprühregen",
+			"light rain": "leichter Regen",
+			"moderate rain": "mäßiger Regen",
+			"heavy rain": "starker Regen",
+			"showers": "Schauerregen",
+			"rain storm": "Gewitterregen",
+			"downpour": "Sturzregen",
+
+			"__end__": ""
+		}
+	}
+}

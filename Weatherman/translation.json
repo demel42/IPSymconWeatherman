@@ -3,6 +3,19 @@
 		"de": {
 			"Weatherman": "Weatherman",
 
+			"__function__": "CheckConfiguration",
+			"Heatindex needs \"w_temperatur\", \"w_feuchte_rel\"": 
+				"Für den Hitzeindex werden \"w_temperatur\", \"w_feuchte_rel\" benötigt",
+			"Absolute pressure needs \"w_barometer\", \"w_temperatur\" and the altitude": 
+				"Absoluter Druck benötigt \"w_barometer\", \"w_temperatur\" und die Höhe",
+			"Windstrength as text needs \"w_windstaerke\"": 
+				"Windstärke als Text benötigt \"w_windstaerke\"",
+			"Precipitation level needs \"w_regen_letzte_h\"": 
+				"Niederschlagsmenge benötigt \"w_regen_letzte_h\"",
+			"use rainsensor to detect drizzle needs \"w_regensensor_wert\"": 
+				"Regensensor zur Erkennung von Nieselregen benötigt \"w_regensensor_wert\"",
+
+			"__elements__": "",
 			"Variables": "Variablen",
 			"available variables": "verfügbare Variablen",
 			"Name": "Name",
@@ -10,9 +23,6 @@
 			"use": "verwenden",
 
 			"Module type": "Modultyp",
-			"none": "nicht angegeben",
-			"Classic": "Klassisch",
-			"Edition": "Edition",
 
 			"Windspeed in km/h instead of m/s": "Windgeschwindigkeit in km/h statt m/s",
 
@@ -31,8 +41,12 @@
 				" ... Regensensor-Wert verwenden um Nieselregen zu erkennen (benötigt \"w_regensensor_wert\")",
 			"minumum rainsensor-value": "minimaler Regensensor-Wert",
 
-			"Module description": "Modulbeschreibung",
+			"__options__": "module_type",
+			"none": "nicht angegeben",
+			"Classic": "Klassisch",
+			"Edition": "Edition",
 
+			"__variables__": "",
 			"Last measurement": "letzte Messung",
 			"Uptime": "Uptime",
 			"wifi-signal": "Wifi-Signal",
@@ -74,9 +88,7 @@
 			"Windspeed": "Windgeschwindigkeit",
 			"Windstrength": "Windstärke",
 
-			"On": "Ein",
-			"Off": "Aus",
-
+			"__function__": "convertWindStrength2Text",
 			"Calm": "Windstille",
 			"Light air": "leiser Zug",
 			"Light breeze": "leichte Brise",
@@ -91,22 +103,7 @@
 			"Hurricane force": "orkanartiger Sturm",
 			"Violent storm": "Orkan",
 
-			"dry": "trocken",
-			"drizzle": "Nieselregen",
-			"mist": "Sprühregen",
-			"light rain": "leichter Regen",
-			"moderate rain": "mäßiger Regen",
-			"heavy rain": "starker Regen",
-			"showers": "Schauerregen",
-			"rain storm": "Gewitterregen",
-			"downpour": "Sturzregen",
-
-			"Instance getting created": "Instanz wird erstellt",
-			"Instance is active": "Instanz ist aktiv",
-			"Instance is deleted": "Instanz wird gelöscht",
-			"Instance is inactive": "Instanz ist inaktiv",
-			"Instance is not created": "Instanz wurde nicht erzeugt",
-			"Instance is inactive (invalid configuration)": "Instanz ist inaktiv (ungültige Konfiguration)"
+			"__end__": ""
 		}
 	}
 }
