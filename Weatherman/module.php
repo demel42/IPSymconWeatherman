@@ -37,7 +37,7 @@ class Weatherman extends IPSModule
 
         $this->RegisterAttributeString('UpdateInfo', '');
 
-		$this->InstallVarProfiles(false);
+        $this->InstallVarProfiles(false);
 
         $this->RequireParent('{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}');
     }
@@ -382,6 +382,19 @@ class Weatherman extends IPSModule
 
             return $formActions;
         }
+
+        $formActions[] = [
+            'type'      => 'ExpansionPanel',
+            'caption'   => 'Expert area',
+            'expanded ' => false,
+            'items'     => [
+                [
+                    'type'    => 'Button',
+                    'caption' => 'Re-install variable-profiles',
+                    'onClick' => $this->GetModulePrefix() . '_InstallVarProfiles($id, true);'
+                ],
+            ],
+        ];
 
         $formActions[] = $this->GetInformationFormAction();
         $formActions[] = $this->GetReferencesFormAction();
