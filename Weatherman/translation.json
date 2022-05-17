@@ -86,6 +86,7 @@
 			"Windchill": "gefühle Temperatur",
 			"Winddirection": "Windrichtung",
 			"Windspeed": "Windgeschwindigkeit",
+			"Speed of gusts of last 10m": "Böen der letzten 10m",
 			"Windstrength": "Windstärke",
 
 			"__function__": "convertWindStrength2Text",

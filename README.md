@@ -153,6 +153,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.10.2 @ 17.05.2022 10:31
+  - fehlende Übersetzung ergänzt
+
 - 1.10.1 @ 10.05.2022 15:06
   - update submodule CommonStubs
 
