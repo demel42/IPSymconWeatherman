@@ -215,7 +215,7 @@ class Weatherman extends IPSModule
         }
     }
 
-    public function UpdateFields(int $module_type, object $use_fields)
+    private function UpdateUseFields(int $module_type, object $use_fields)
     {
         $values = [];
 
@@ -239,7 +239,7 @@ class Weatherman extends IPSModule
         $this->UpdateFormField('use_fields', 'values', json_encode($values));
     }
 
-    protected function GetFormElements()
+    private function GetFormElements()
     {
         $formElements = $this->GetCommonFormElements('Weatherman');
 
@@ -265,7 +265,7 @@ class Weatherman extends IPSModule
                     'value'   => self::$WEATHERMAN_MODULE_EDITION,
                 ],
             ],
-            'onChange' => 'Weatherman_UpdateFields($id, $module_type, $use_fields);'
+            'onClick' => 'IPS_RequestAction(' . $this->InstanceID . ', "UpdateUseFields", "");',
         ];
 
         $values = [];
@@ -370,7 +370,7 @@ class Weatherman extends IPSModule
         return $formElements;
     }
 
-    protected function GetFormActions()
+    private function GetFormActions()
     {
         $formActions = [];
 
@@ -388,11 +388,7 @@ class Weatherman extends IPSModule
             'caption'   => 'Expert area',
             'expanded ' => false,
             'items'     => [
-                [
-                    'type'    => 'Button',
-                    'caption' => 'Re-install variable-profiles',
-                    'onClick' => $this->GetModulePrefix() . '_InstallVarProfiles($id, true);'
-                ],
+                $this->GetInstallVarProfilesFormItem(),
             ],
         ];
 
@@ -408,6 +404,9 @@ class Weatherman extends IPSModule
             return;
         }
         switch ($ident) {
+            case 'UpdateUseFields':
+                $this->UpdateUseFields();
+                break;
             default:
                 $this->SendDebug(__FUNCTION__, 'invalid ident ' . $ident, 0);
                 break;
