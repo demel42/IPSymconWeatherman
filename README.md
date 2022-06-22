@@ -153,6 +153,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.11.1 @ 22.06.2022 10:33
+  - Fix: Angabe der Kompatibilität auf 6.2 korrigiert
+
 - 1.11 @ 29.05.2022 14:55
   - update submodule CommonStubs
     Fix: Ausgabe des nächsten Timer-Zeitpunkts

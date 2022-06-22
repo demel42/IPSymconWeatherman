@@ -4,9 +4,9 @@
 	"name": "Weatherman",
 	"url": "https://github.com/demel42/IPSymconWeatherman",
 	"compatibility": {
-		"version": "6.0"
+		"version": "6.2"
 	},
-	"version": "1.11",
+	"version": "1.11.1",
 	"build": 0,
-	"date": 1653828957
+	"date": 1655886820
 }
