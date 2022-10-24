@@ -386,7 +386,7 @@ class Weatherman extends IPSModule
         $formActions[] = [
             'type'      => 'ExpansionPanel',
             'caption'   => 'Expert area',
-            'expanded ' => false,
+            'expanded'  => false,
             'items'     => [
                 $this->GetInstallVarProfilesFormItem(),
             ],
