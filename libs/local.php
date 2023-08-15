@@ -81,16 +81,16 @@ trait WeathermanLocalLib
         $this->CreateVarProfile('Weatherman.WindAngle', VARIABLETYPE_INTEGER, ' °', 0, 360, 0, 0, 'WindDirection', [], $reInstall);
         $this->CreateVarProfile('Weatherman.WindStrength', VARIABLETYPE_INTEGER, ' bft', 0, 13, 0, 0, 'WindSpeed', [], $reInstall);
 
-        $this->CreateVarProfile('Weatherman.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 10, 100, 0, 0, 'Drops', [], $reInstall);
-        $this->CreateVarProfile('Weatherman.Dewpoint', VARIABLETYPE_FLOAT, ' °C', 0, 30, 0, 0, 'Drops', [], $reInstall);
-        $this->CreateVarProfile('Weatherman.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature', [], $reInstall);
-        $this->CreateVarProfile('Weatherman.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 0, 0, 0, 'Drops', [], $reInstall);
+        $this->CreateVarProfile('Weatherman.absHumidity', VARIABLETYPE_FLOAT, ' g/m³', 0, 80, 0, 0, 'Drops', [], $reInstall);
+        $this->CreateVarProfile('Weatherman.Dewpoint', VARIABLETYPE_FLOAT, ' °C', -10, 40, 0, 0, 'Drops', [], $reInstall);
+        $this->CreateVarProfile('Weatherman.Heatindex', VARIABLETYPE_FLOAT, ' °C', 0, 60, 0, 0, 'Temperature', [], $reInstall);
+        $this->CreateVarProfile('Weatherman.Humidity', VARIABLETYPE_FLOAT, ' %', 0, 100, 0, 0, 'Drops', [], $reInstall);
         $this->CreateVarProfile('Weatherman.Lux', VARIABLETYPE_FLOAT, ' lx', 0, 0, 0, 0, 'Sun', [], $reInstall);
-        $this->CreateVarProfile('Weatherman.Precipitation', VARIABLETYPE_FLOAT, ' mm/h', 0, 60, 0, 1, 'Rainfall', [], $reInstall);
+        $this->CreateVarProfile('Weatherman.Precipitation', VARIABLETYPE_FLOAT, ' mm/h', 0, 0, 0, 1, 'Rainfall', [], $reInstall);
         $this->CreateVarProfile('Weatherman.Pressure', VARIABLETYPE_FLOAT, ' mbar', 0, 0, 0, 0, 'Gauge', [], $reInstall);
         $this->CreateVarProfile('Weatherman.Pressure', VARIABLETYPE_FLOAT, ' mbar', 500, 1200, 0, 0, 'Gauge', [], $reInstall);
-        $this->CreateVarProfile('Weatherman.Rainfall', VARIABLETYPE_FLOAT, ' mm', 0, 60, 0, 1, 'Rainfall', [], $reInstall);
-        $this->CreateVarProfile('Weatherman.Temperatur', VARIABLETYPE_FLOAT, ' °C', -10, 30, 0, 1, 'Temperature', [], $reInstall);
+        $this->CreateVarProfile('Weatherman.Rainfall', VARIABLETYPE_FLOAT, ' mm', 0, 0, 0, 1, 'Rainfall', [], $reInstall);
+        $this->CreateVarProfile('Weatherman.Temperatur', VARIABLETYPE_FLOAT, ' °C', -25, 45, 0, 1, 'Temperature', [], $reInstall);
         $associations = [
             ['Wert' =>  0, 'Name' => '%.1f', 'Farbe' => 0x80FF00],
             ['Wert' => 3, 'Name' => '%.1f', 'Farbe' => 0xFFFF00],
@@ -99,8 +99,8 @@ trait WeathermanLocalLib
             ['Wert' => 11, 'Name' => '%.1f', 'Farbe' => 0xFF00FF],
         ];
         $this->CreateVarProfile('Weatherman.UV-Index', VARIABLETYPE_FLOAT, '', 0, 12, 0, 1, 'Sun', $associations, $reInstall);
-        $this->CreateVarProfile('Weatherman.Windchill', VARIABLETYPE_FLOAT, ' °C', 0, 100, 0, 0, 'Temperature', [], $reInstall);
-        $this->CreateVarProfile('Weatherman.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 100, 0, 0, 'WindSpeed', [], $reInstall);
+        $this->CreateVarProfile('Weatherman.Windchill', VARIABLETYPE_FLOAT, ' °C', -30, 45, 0, 0, 'Temperature', [], $reInstall);
+        $this->CreateVarProfile('Weatherman.WindSpeed', VARIABLETYPE_FLOAT, ' km/h', 0, 150, 0, 0, 'WindSpeed', [], $reInstall);
 
         $this->CreateVarProfile('Weatherman.WindDirection', VARIABLETYPE_STRING, '', 0, 0, 0, 0, 'WindDirection', [], $reInstall);
     }

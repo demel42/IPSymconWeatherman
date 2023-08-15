@@ -108,6 +108,40 @@ class Weatherman extends IPSModule
         return $r;
     }
 
+    private function CheckModuleUpdate(array $oldInfo, array $newInfo)
+    {
+        $r = [];
+
+        if ($this->version2num($oldInfo) < $this->version2num('1.14')) {
+            $r[] = $this->Translate('Adjusting the value range of various variable profiles');
+        }
+
+        return $r;
+    }
+
+    private function CompleteModuleUpdate(array $oldInfo, array $newInfo)
+    {
+        if ($this->version2num($oldInfo) < $this->version2num('1.14')) {
+            $vps = [
+                'Weatherman.Temperatur',
+                'Weatherman.Humidity',
+                'Weatherman.absHumidity',
+                'Weatherman.Dewpoint',
+                'Weatherman.Heatindex',
+                'Weatherman.WindSpeed',
+                'Weatherman.Windchill',
+            ];
+            foreach ($vps as $vp) {
+                if (IPS_VariableProfileExists($vp)) {
+                    IPS_DeleteVariableProfile($vp);
+                }
+            }
+            $this->InstallVarProfiles(false);
+        }
+
+        return '';
+    }
+
     public function ApplyChanges()
     {
         parent::ApplyChanges();

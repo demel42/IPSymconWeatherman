@@ -3,6 +3,9 @@
 		"de": {
 			"Weatherman": "Weatherman",
 
+			"__function__": "CheckModuleUpdate",
+			"Adjusting the value range of various variable profiles": "Wertebereich diverser Variablenprofile anpassen",
+
 			"__function__": "CheckConfiguration",
 			"Heatindex needs \"w_temperatur\", \"w_feuchte_rel\"": 
 				"Für den Hitzeindex werden \"w_temperatur\", \"w_feuchte_rel\" benötigt",

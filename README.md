@@ -153,6 +153,17 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.14 @ 15.08.2023 10:36
+  - Fix: Wertebereich diverser Variablenprofile angepasst
+    - Weatherman.Temperatur: -10..30 -> -25..45 °C
+    - Weatherman.Humidity: n/a -> 0..100 %
+    - Weatherman.absHumidity: n/a -> 0..80 g/m³
+    - Weatherman.Dewpoint: 0..30 -> -10..40 °C
+    - Weatherman.Heatindex: 0..100 -> 0..60 °C
+    - Weatherman.Windchill: 0..100 -> -30..45 °C
+    - Weatherman.WindSpeed: 0..100 -> 0..150 km/h
+  - update submodule CommonStubs
+
 - 1.13 @ 04.07.2023 14:44
   - Vorbereitung auf IPS 7 / PHP 8.2
   - update submodule CommonStubs
