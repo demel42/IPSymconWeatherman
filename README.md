@@ -153,6 +153,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.15 @ 21.09.2023 10:12
+  - Neu: Ermittlung von Speicherbedarf und Laufzeit (aktuell und für 31 Tage) und Anzeige im Panel "Information"
+  - update submodule CommonStubs
+
 - 1.14 @ 15.08.2023 10:36
   - Fix: Wertebereich diverser Variablenprofile angepasst
     - Weatherman.Temperatur: -10..30 -> -25..45 °C
