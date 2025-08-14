@@ -32,6 +32,7 @@ trait WeathermanLocalLib
     public static $WEATHERMAN_MODULE_NONE = 0;
     public static $WEATHERMAN_MODULE_CLASSIC = 1;
     public static $WEATHERMAN_MODULE_EDITION = 2;
+    public static $WEATHERMAN_MODULE_EDITION21 = 3;
 
     public static $PRECIPITATION_DRY = 0;
     public static $PRECIPITATION_DRIZZLE = 1;

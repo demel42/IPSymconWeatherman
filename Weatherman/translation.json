@@ -48,6 +48,7 @@
 			"none": "nicht angegeben",
 			"Classic": "Klassisch",
 			"Edition": "Edition",
+			"Edition 2.1": "Edition 2.1",
 
 			"__variables__": "",
 			"Last measurement": "letzte Messung",
@@ -91,6 +92,8 @@
 			"Windspeed": "Windgeschwindigkeit",
 			"Speed of gusts of last 10m": "Böen der letzten 10m",
 			"Windstrength": "Windstärke",
+			"Average wind speed": "Durchschnittliche Windgeschwindigkeit",
+			"Maximum wind speed": "Maximale Windgeschwindigkeit",
 
 			"__function__": "convertWindStrength2Text",
 			"Calm": "Windstille",

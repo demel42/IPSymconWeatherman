@@ -153,6 +153,9 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.18 @ 28.05.2025 13:33
+  - Unterstützung der "Weatherman-Edition 2.1"
+
 - 1.17 @ 02.01.2025 14:28
   - interne Änderung
   - update submodule CommonStubs
