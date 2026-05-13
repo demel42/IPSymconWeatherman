@@ -153,6 +153,10 @@ GUIDs
 
 ## 7. Versions-Historie
 
+- 1.19 @ 11.05.2026 15:02
+  - Fix: Änderung von deprecated php code
+  - update submodule CommonStubs
+
 - 1.18 @ 28.05.2025 13:33
   - Erweiterung: Unterstützung der "Weatherman-Edition 2.1"
 
